@@ -1,0 +1,17 @@
+header, footer {
+    padding: 25px;
+    background-color: lightsteelblue;
+    text-align: center;
+    color: #1e1e1e;
+}
+
+ul {
+    list-style-type: circle;
+}
+
+footer {
+    position: absolute;
+    right: 5px; left: 5px; bottom: 50px;
+}
+
+/* Créé par Yannis Sauzeau et ... */

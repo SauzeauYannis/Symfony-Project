@@ -1,0 +1,23 @@
+im2021_utilisateurs.sql
+  la table des utilisateurs
+  rappelez-vous que vous ne devez pas changer son nom, sa structure
+  ou le nom des colonnes (notamment la clé primaire).
+
+liste_produits.html
+  un exemple de page listant tous les produits. Vous êtes libre
+  de la présentation.
+
+panier.html
+un exemple de page gérant le panier. Vous êtes libre de la
+  présentation.
+
+verif_archive.sh
+  permet de vérifier votre archive
+  syntaxe (attention ne pas utiliser "source") :
+      $ ./verif_archive.sh subrenat zrour
+  il ne doit rester aucune erreur
+
+ls-R.txt
+  un exemple de fichier listant les fichiers de config uniquement
+  qui ont été modifiés ou créés.
+  Vous êtes libre de la présentation.

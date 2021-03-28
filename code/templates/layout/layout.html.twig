@@ -1,0 +1,15 @@
+{% extends 'main/layout.html.twig' %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
+    {% block stylesheets_page %}{% endblock %}
+{% endblock %}
+
+{% block body %}
+    {{ include('main/banner_top.html.twig') }}
+    {{ include('main/menu.html.twig') }}
+    {% block body_page %}{% endblock %}
+    {{ include('main/banner_bottom.html.twig') }}
+{% endblock %}
+
+{# Créé par Yannis Sauzeau et ... #}
