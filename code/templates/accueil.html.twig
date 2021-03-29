@@ -9,7 +9,17 @@
 {% endblock %}
 
 {% block body_page %}
-    <h1>Bienvenue !</h1>
+    <h1>Bienvenue
+        {% if utilisateur is null %}
+            anonyme
+        {% else %}
+            {% if utilisateur.isadmin == 1 %}
+                administrateur
+            {% else %}
+                client
+            {% endif %}
+        {% endif %}
+        !</h1>
 {% endblock %}
 
 {# Créé par Yannis Sauzeau et ... #}
