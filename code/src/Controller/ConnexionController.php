@@ -19,14 +19,7 @@ class ConnexionController extends AbstractController
      */
     public function seConnecterAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('connexion/se_connecter.html.twig', $args);
+        return $this->render('connexion/se_connecter.html.twig');
     }
 
     /**
@@ -34,14 +27,7 @@ class ConnexionController extends AbstractController
      */
     public function seDeconnecterAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('connexion/se_deconnecter.html.twig', $args);
+        return $this->render('connexion/se_deconnecter.html.twig');
     }
 }
 

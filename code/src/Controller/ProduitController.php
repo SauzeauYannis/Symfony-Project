@@ -19,14 +19,7 @@ class ProduitController extends AbstractController
      */
     public function listeAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('produit/liste.html.twig', $args);
+        return $this->render('produit/liste.html.twig');
     }
 
     /**
@@ -34,14 +27,7 @@ class ProduitController extends AbstractController
      */
     public function ajouterAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('produit/ajouter.html.twig', $args);
+        return $this->render('produit/ajouter.html.twig');
     }
 }
 

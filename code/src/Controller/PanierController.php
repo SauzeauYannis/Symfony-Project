@@ -19,14 +19,7 @@ class PanierController extends AbstractController
      */
     public function panierAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('panier/panier.html.twig', $args);
+        return $this->render('panier/panier.html.twig');
     }
 }
 
