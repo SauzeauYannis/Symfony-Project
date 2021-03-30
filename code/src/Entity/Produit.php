@@ -6,6 +6,7 @@ use App\Repository\ProduitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="im2021_produit", options={"comment":"Table des produits du site"})
  * @ORM\Entity(repositoryClass=ProduitRepository::class)
  */
 class Produit
