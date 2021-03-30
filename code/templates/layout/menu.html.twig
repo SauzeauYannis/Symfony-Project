@@ -1,26 +1,6 @@
-<style>
-    a:link {
-        color: lightsteelblue;
-        text-decoration: none;
-    }
+<link rel="stylesheet" href="{{ asset('css/menu.css') }}" type="text/css">
 
-    a:visited {
-        color: cornflowerblue;
-        text-decoration: none;
-    }
-
-    a:hover {
-        color: deepskyblue;
-        text-decoration: underline;
-    }
-
-    a:active {
-        color: lightsteelblue;
-        text-decoration: underline;
-    }
-</style>
-
-<h2>Nombre de produit disponible : {{ nombre_de_produits }}</h2>
+<h3>Nombre de produit(s) disponible(s) : {{ nombre_de_produits }}</h3>
 <ul>
     <li><a href="{{ path('accueil', {'utilisateur': utilisateur}) }}">Accueil</a></li>
     {% if utilisateur is null %}

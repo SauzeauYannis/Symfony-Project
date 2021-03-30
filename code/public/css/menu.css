@@ -1,0 +1,30 @@
+ul {
+    list-style-type: circle;
+}
+
+a:link {
+    color: lightsteelblue;
+    text-decoration: none;
+}
+
+a:visited {
+    color: cornflowerblue;
+    text-decoration: none;
+}
+
+a:hover {
+    color: deepskyblue;
+    text-decoration: underline;
+}
+
+a:active {
+    color: lightsteelblue;
+    text-decoration: underline;
+}
+
+h3 {
+    position: relative;
+    left: 25px;
+}
+
+/* Créé par Yannis Sauzeau et ... */
