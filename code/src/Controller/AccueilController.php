@@ -17,14 +17,7 @@ class AccueilController extends AbstractController
      */
     public function accueilAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('accueil.html.twig', $args);
+        return $this->render('accueil.html.twig');
     }
 }
 

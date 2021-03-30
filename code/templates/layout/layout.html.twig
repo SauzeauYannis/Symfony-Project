@@ -7,7 +7,7 @@
 
 {% block body %}
     {{ include('layout/banner_top.html.twig') }}
-    {{ include('layout/menu.html.twig') }}
+    {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
     {% block body_page %}{% endblock %}
     {{ include('layout/banner_bottom.html.twig') }}
 {% endblock %}

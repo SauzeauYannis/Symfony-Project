@@ -19,14 +19,7 @@ class UtilisateurController extends AbstractController
      */
     public function creationAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('utilisateur/creation.html.twig', $args);
+        return $this->render('utilisateur/creation.html.twig');
     }
 
     /**
@@ -34,14 +27,7 @@ class UtilisateurController extends AbstractController
      */
     public function editionAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('utilisateur/edition.html.twig', $args);
+        return $this->render('utilisateur/edition.html.twig');
     }
 
     /**
@@ -49,14 +35,7 @@ class UtilisateurController extends AbstractController
      */
     public function gestionAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('utilisateur/gestion.html.twig', $args);
+        return $this->render('utilisateur/gestion.html.twig');
     }
 }
 
