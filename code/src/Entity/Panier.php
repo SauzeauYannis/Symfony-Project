@@ -6,6 +6,7 @@ use App\Repository\PanierRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * @ORM\Table(name="im2021_panier", options={"comment":"Table du panier du site"})
  * @ORM\Entity(repositoryClass=PanierRepository::class)
  */
 class Panier
