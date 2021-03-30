@@ -16,7 +16,7 @@
             {% if utilisateur.isadmin == 1 %}
                 administrateur
             {% else %}
-                client
+                client {{ utilisateur.prenom }}
             {% endif %}
         {% endif %}
         !</h1>
