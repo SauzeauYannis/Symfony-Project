@@ -125,3 +125,5 @@ class Utilisateur
         return $this;
     }
 }
+
+/* Créé par Yannis Sauzeau et ... */
