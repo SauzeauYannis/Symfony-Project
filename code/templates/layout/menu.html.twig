@@ -1,9 +1,43 @@
+<style>
+    a:link {
+        color: lightsteelblue;
+        text-decoration: none;
+    }
+
+    a:visited {
+        color: cornflowerblue;
+        text-decoration: none;
+    }
+
+    a:hover {
+        color: deepskyblue;
+        text-decoration: underline;
+    }
+
+    a:active {
+        color: lightsteelblue;
+        text-decoration: underline;
+    }
+</style>
+
 <h2>TODO: Nombre de produit disponible dans la bdd</h2>
 <ul>
-    <li>TODO</li>
-    <li>Faire</li>
-    <li>le</li>
-    <li>menu</li>
+    <li><a href="{{ path('accueil', {'utilisateur': utilisateur}) }}">Accueil</a></li>
+    {% if utilisateur is null %}
+        <li><a href="{{ path('se_connecter', {'utilisateur': utilisateur}) }}">Se connecter</a></li>
+        <li><a href="{{ path('creation_utilisateur', {'utilisateur': utilisateur}) }}">Créer un compte</a></li>
+    {% else %}
+        <li><a href="{{ path('se_deconnecter', {'utilisateur': utilisateur}) }}">Se déconnecter</a></li>
+        {% if utilisateur.isadmin == 1 %}
+            <li><a href="{{ path('gestion_utilisateur', {'utilisateur': utilisateur}) }}">Gérer les utilisateurs</a></li>
+            <li><a href="{{ path('ajouter_produit', {'utilisateur': utilisateur}) }}">Ajouter un produit</a></li>
+            <li><a href="https://fr.wikipedia.org/wiki/Amour_et_Amn%C3%A9sie">Amour et Amnésie</a></li>
+        {% else %}
+            <li><a href="{{ path('edition_utilisateur', {'utilisateur': utilisateur}) }}">Editer son profil</a></li>
+            <li><a href="{{ path('liste_produit', {'utilisateur': utilisateur}) }}">Lister les produits</a></li>
+            <li><a href="{{ path('panier', {'utilisateur': utilisateur}) }}">Gérer son panier</a></li>
+        {% endif %}
+    {% endif %}
 </ul>
 
 {# Créé par Yannis Sauzeau et ... #}

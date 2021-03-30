@@ -7,15 +7,17 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class AccueilController
+ * Class PanierController
  * @package App\Controller
+ *
+ * @Route("/panier")
  */
-class AccueilController extends AbstractController
+class PanierController extends AbstractController
 {
     /**
-     * @Route("/", name="accueil")
+     * @Route("/", name="panier")
      */
-    public function accueilAction(): Response
+    public function panierAction(): Response
     {
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
@@ -24,7 +26,7 @@ class AccueilController extends AbstractController
         $utilisateur = $utilisateurRepository->find($utilisateurId);
 
         $args = ['utilisateur' => $utilisateur];
-        return $this->render('accueil.html.twig', $args);
+        return $this->render('panier/panier.html.twig', $args);
     }
 }
 
