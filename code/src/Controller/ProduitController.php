@@ -19,6 +19,15 @@ class ProduitController extends AbstractController
      */
     public function listeAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
         return $this->render('produit/liste.html.twig');
     }
 
@@ -27,8 +36,17 @@ class ProduitController extends AbstractController
      */
     public function ajouterAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
+            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
+
         return $this->render('produit/ajouter.html.twig');
     }
 }
 
-/* Créé par Yannis Sauzeau et ... */
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

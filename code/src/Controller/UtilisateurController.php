@@ -19,6 +19,15 @@ class UtilisateurController extends AbstractController
      */
     public function creationAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur != null)
+            throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
+
         return $this->render('utilisateur/creation.html.twig');
     }
 
@@ -27,6 +36,15 @@ class UtilisateurController extends AbstractController
      */
     public function editionAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
         return $this->render('utilisateur/edition.html.twig');
     }
 
@@ -35,8 +53,17 @@ class UtilisateurController extends AbstractController
      */
     public function gestionAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
+            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
+
         return $this->render('utilisateur/gestion.html.twig');
     }
 }
 
-/* Créé par Yannis Sauzeau et ... */
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

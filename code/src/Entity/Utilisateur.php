@@ -126,4 +126,4 @@ class Utilisateur
     }
 }
 
-/* Créé par Yannis Sauzeau et ... */
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

@@ -19,6 +19,15 @@ class ConnexionController extends AbstractController
      */
     public function seConnecterAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur != null)
+            throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
+
         return $this->render('connexion/se_connecter.html.twig');
     }
 
@@ -27,8 +36,17 @@ class ConnexionController extends AbstractController
      */
     public function seDeconnecterAction(): Response
     {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null)
+            throw $this->createNotFoundException('Vous devez être authentifié pour accéder à cette page');
+
         return $this->render('connexion/se_deconnecter.html.twig');
     }
 }
 
-/* Créé par Yannis Sauzeau et ... */
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

@@ -30,3 +30,5 @@ class MenuController extends AbstractController
         return $this->render('layout/menu.html.twig', $args);
     }
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

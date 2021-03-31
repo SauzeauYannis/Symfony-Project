@@ -6,10 +6,16 @@
 {% endblock %}
 
 {% block body %}
-    {{ include('layout/banner_top.html.twig') }}
-    {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
+    <div id="banner_top">
+        {{ include('layout/banner_top.html.twig') }}
+    </div>
+    <div id="menu">
+        {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
+    </div>
     {% block body_page %}{% endblock %}
-    {{ include('layout/banner_bottom.html.twig') }}
+    <footer>
+        <img src="{{ asset('image/banner_bottom.jpg') }}" alt="Image du bandeau de bas de page">
+    </footer>
 {% endblock %}
 
-{# Créé par Yannis Sauzeau et ... #}
+{# Créé par Yannis Sauzeau et Benjamin Chevais #}

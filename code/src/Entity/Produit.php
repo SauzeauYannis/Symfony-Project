@@ -74,3 +74,5 @@ class Produit
         return $this;
     }
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

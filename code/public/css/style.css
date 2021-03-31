@@ -1,4 +1,4 @@
-header, footer {
+header {
     padding: 25px;
     background-color: lightsteelblue;
     text-align: center;
@@ -6,8 +6,8 @@ header, footer {
 }
 
 footer {
-    position: absolute;
-    right: 5px; left: 5px; bottom: 50px;
+    background-color: #1e1e1e;
+    text-align: center;
 }
 
-/* Créé par Yannis Sauzeau et ... */
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

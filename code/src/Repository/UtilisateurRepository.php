@@ -48,5 +48,3 @@ class UtilisateurRepository extends ServiceEntityRepository
     }
     */
 }
-
-/* Créé par Yannis Sauzeau et ... */
