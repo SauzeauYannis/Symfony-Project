@@ -56,8 +56,10 @@ class UtilisateurController extends AbstractController
 
     /**
      * @Route("/edition", name="edition_utilisateur")
+     * @param Request $request
+     * @return Response
      */
-    public function editionAction(): Response
+    public function editionAction(Request $request): Response
     {
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
@@ -68,7 +70,23 @@ class UtilisateurController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        return $this->render('utilisateur/edition.html.twig');
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->add('send', SubmitType::class, ['label' => 'Editer le compte']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted())
+        {
+            if ($form->isValid())
+            {
+                $em->flush();
+                $this->addFlash('info', 'Les modifications ont bien étés prises en compte');
+                return $this->redirectToRoute('liste_produit');
+            }
+            $this->addFlash('info', 'Les modifications n\'ont pas étés prises en compte');
+        }
+
+        $args = array('edit_user_form' => $form->createView());
+        return $this->render('utilisateur/edition.html.twig', $args);
     }
 
     /**
