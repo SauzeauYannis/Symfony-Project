@@ -7,7 +7,7 @@
 
 {% block body %}
     <div id="banner_top">
-        {{ include('layout/banner_top.html.twig') }}
+        {{ render(controller('App\\Controller\\BannerTopController::bannerAction')) }}
     </div>
     <div id="menu">
         {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
