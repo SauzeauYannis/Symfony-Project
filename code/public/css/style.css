@@ -5,9 +5,15 @@ header, footer {
     color: #1e1e1e;
 }
 
+#container {
+    margin-bottom: 150px;
+}
+
 footer {
-    position: absolute;
-    right: 5px; left: 5px; bottom: 50px;
+    position: relative;
+    clear: both;
+    margin-top: -100px;
+    height: 100px;
 }
 
 #flash > h2 {
