@@ -10,4 +10,15 @@ footer {
     right: 5px; left: 5px; bottom: 50px;
 }
 
+#flash > h2 {
+    width: fit-content;
+    width: -moz-fit-content;
+    padding: 15px;
+    background-color: aquamarine;
+    color: black;
+    position: relative;
+    left: 25px;
+    top: 10px;
+}
+
 /* Créé par Yannis Sauzeau et Benjamin Chevais */

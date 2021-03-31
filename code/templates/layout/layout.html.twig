@@ -12,6 +12,11 @@
     <div id="menu">
         {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
     </div>
+    <div id="flash">
+        {% for msg in app.session.flashBag.get('info') %}
+            <h2>{{ msg }}</h2>
+        {% endfor %}
+    </div>
     {% block body_page %}{% endblock %}
     <div id="banner_bottom">
         <footer>

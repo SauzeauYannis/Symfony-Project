@@ -3,14 +3,4 @@ h1 {
     text-align: center;
 }
 
-h2 {
-    width: fit-content;
-    padding: 25px;
-    background-color: aquamarine;
-    color: black;
-    position: relative;
-    left: 25px;
-    top: 10px;
-}
-
 /* Créé par Yannis Sauzeau et Benjamin Chevais */
