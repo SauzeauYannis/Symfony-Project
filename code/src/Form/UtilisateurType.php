@@ -11,12 +11,12 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
-class NewUserType extends AbstractType
+class UtilisateurType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('identifiant', EmailType::class,
+            ->add('identifiant', TextType::class,
                     ['label' => 'Adresse mail']) //vérifiez qu'il n'est pas déjà pris
             ->add('motdepasse', PasswordType::class,
                     ['label' => 'Mot de passe']) // hashez le mdp avec sh1
