@@ -9,10 +9,6 @@
 {% endblock %}
 
 {% block body_page %}
-    {% for msg in app.session.flashBag.get('info') %}
-        <h2>{{ msg }}</h2>
-    {% endfor %}
-
     <h1>Bienvenue
         {% if utilisateur is null %}
             anonyme
