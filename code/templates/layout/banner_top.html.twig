@@ -1,5 +1,13 @@
 <header>
-    <p>TODO: Faire le bandeau supérieur fixe</p>
+    {% if utilisateur is null %}
+        <img src="{{ asset('image/banner_top_visitor.jpg') }}" alt="Image du bandeau supérieur d'un visiteur">
+    {% else %}
+        {% if utilisateur.isadmin == 1 %}
+            <img src="{{ asset('image/banner_top_administrator.jpg') }}" alt="Image du bandeau supérieur d'un administrateur">
+        {% else %}
+            <img src="{{ asset('image/banner_top_customer.jpg') }}" alt="Image du bandeau supérieur d'un client authentifié">
+        {% endif %}
+    {% endif %}
 </header>
 
 {# Créé par Yannis Sauzeau et Benjamin Chevais #}

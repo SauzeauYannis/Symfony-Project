@@ -13,9 +13,11 @@
         {{ render(controller('App\\Controller\\MenuController::menuAction')) }}
     </div>
     {% block body_page %}{% endblock %}
-    <footer>
-        <img src="{{ asset('image/banner_bottom.jpg') }}" alt="Image du bandeau de bas de page">
-    </footer>
+    <div id="banner_bottom">
+        <footer>
+            <img src="{{ asset('image/banner_bottom.jpg') }}" alt="Image du bandeau de bas de page">
+        </footer>
+    </div>
 {% endblock %}
 
 {# Créé par Yannis Sauzeau et Benjamin Chevais #}
