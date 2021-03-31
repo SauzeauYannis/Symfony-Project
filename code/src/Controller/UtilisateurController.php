@@ -34,17 +34,17 @@ class UtilisateurController extends AbstractController
         if ($utilisateur != null)
             throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
 
-        $u = new Utilisateur();
+        $nouvel_utilisateur = new Utilisateur();
 
         // gestion du formulaire création de compte
-        $form = $this->createForm(UtilisateurType::class, $u);
+        $form = $this->createForm(UtilisateurType::class, $nouvel_utilisateur);
         $form->add('send', SubmitType::class, ['label' => 'create account']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
-            $u = $form->getData();
-            $u->setIsadmin(0);
-            $em->persist($u);
+            $nouvel_utilisateur = $form->getData();
+            $nouvel_utilisateur->setIsadmin(0);
+            $em->persist($nouvel_utilisateur);
             $em->flush();
             $this->addFlash('info', 'Votre compte a bien été créé');
             return $this->redirectToRoute("accueil");
