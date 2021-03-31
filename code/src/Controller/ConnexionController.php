@@ -45,7 +45,10 @@ class ConnexionController extends AbstractController
         if ($utilisateur == null)
             throw $this->createNotFoundException('Vous devez être authentifié pour accéder à cette page');
 
-        return $this->render('connexion/se_deconnecter.html.twig');
+        $this->addFlash('info', 'Vous avez été correctement déconnecté');
+
+        $args = ['utilisateur' => $utilisateur];
+        return $this->render('accueil.html.twig', $args);
     }
 }
 
