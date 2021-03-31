@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
+use App\Entity\Utilisateur;
+use App\Form\NewUserType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -16,8 +20,10 @@ class UtilisateurController extends AbstractController
 {
     /**
      * @Route("/creation", name="creation_utilisateur")
+     * @param Request $request
+     * @return Response
      */
-    public function creationAction(): Response
+    public function creationAction(Request $request): Response
     {
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
@@ -28,7 +34,20 @@ class UtilisateurController extends AbstractController
         if ($utilisateur != null)
             throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
 
-        return $this->render('utilisateur/creation.html.twig');
+
+        // gestion du formulaire création de compte
+        $form = $this->createForm(NewUserType::class, new Utilisateur());
+        $form->add('send', SubmitType::class, ['label' => 'create account']);
+        $form->handleRequest($request);
+
+        if($form->isSubmitted() && $form->isValid()){
+            $em->flush();
+            $this->addFlash('info', 'Votre compte a bien été pris en compte');
+            return $this->redirectToRoute("accueil");
+        } else {
+            $args = array('create_user_form' => $form->createView());
+            return $this->render('utilisateur/creation.html.twig', $args);
+        }
     }
 
     /**
