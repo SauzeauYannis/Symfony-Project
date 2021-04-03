@@ -1,1 +1,27 @@
+table, input {
+    position: relative;
+    top: 10px;
+    left: 25px;
+    width: 95%;
+}
+
+table, th, td {
+    border: 2px solid whitesmoke;
+}
+
+th, td {
+    text-align: center;
+    padding: 15px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
+input {
+    font-size: 20px;
+    border-radius: 15px;
+    top: 30px;
+}
+
 /* Créé par Yannis Sauzeau et Benjamin Chevais */

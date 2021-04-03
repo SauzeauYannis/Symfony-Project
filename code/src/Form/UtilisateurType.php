@@ -24,7 +24,7 @@ class UtilisateurType extends AbstractType
             ->add('prenom', TextType::class,
                     ['label' => 'Prénom'])
             ->add('anniversaire', DateType::class,
-                    ['label' => 'Date de naissance', 'years' => range(date('Y')-100, date('Y'))]);
+                    ['label' => 'Date de naissance', 'years' => range(date('Y') - 100, date('Y') - 1)]);
     }
 
     public function configureOptions(OptionsResolver $resolver)

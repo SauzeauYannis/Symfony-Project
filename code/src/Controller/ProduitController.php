@@ -22,13 +22,20 @@ class ProduitController extends AbstractController
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
         $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $produitRepository = $em->getRepository('App:Produit');
 
         $utilisateur = $utilisateurRepository->find($utilisateurId);
 
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        return $this->render('produit/liste.html.twig');
+        $produits = $produitRepository->findAll();
+
+        foreach ($_POST as $key => $value)
+            $this->addFlash('info', '$key = ' . $key . ' and $value = ' . $value);
+
+        $args = ['produits' => $produits];
+        return $this->render('produit/liste.html.twig', $args);
     }
 
     /**

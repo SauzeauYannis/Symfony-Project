@@ -5,11 +5,42 @@
 {% endblock %}
 
 {% block stylesheets_page %}
-    <link rel="stylesheet" href="{{ asset('css/produit/ajouter.css') }}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/liste.css') }}" type="text/css">
 {% endblock %}
 
 {% block body_page %}
-    <h1>TODO: Liste des produits</h1>
+    <form action="{{ path('liste_produit') }}" method="post">
+        <table>
+            <tr>
+                <th>Libellé</th>
+                <th>Prix</th>
+                <th>Stock</th>
+                <th>Choix</th>
+            </tr>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.prixUnitaire }}</td>
+                    {% if produit.quantite is null %}
+                        <td>0</td>
+                        <td></td>
+                    {% else %}
+                        <td>{{ produit.quantite }}</td>
+                        <td>
+                            <label>
+                                <select name="{{ produit.libelle }}">
+                                    {% for i in 0..produit.quantite %}
+                                        <option value="{{ i }}">{{ i }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                        </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </table>
+        <input type="submit" value="Ajouter" />
+    </form>
 {% endblock %}
 
 {# Créé par Yannis Sauzeau et Benjamin Chevais #}
