@@ -20,7 +20,7 @@ class Panier
 
     /**
      * @ORM\ManyToOne(targetEntity=Utilisateur::class)
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(referencedColumnName="pk", nullable=false)
      */
     private $utilisateur;
 

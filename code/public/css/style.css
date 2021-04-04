@@ -41,4 +41,17 @@ select, button {
     left: 25px;
 }
 
+table, th, td {
+    border: 2px solid whitesmoke;
+}
+
+th, td {
+    text-align: center;
+    padding: 15px;
+}
+
+table {
+    border-collapse: collapse;
+}
+
 /* Créé par Yannis Sauzeau et Benjamin Chevais */

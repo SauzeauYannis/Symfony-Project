@@ -28,7 +28,7 @@
                         <td>{{ produit.quantite }}</td>
                         <td>
                             <label>
-                                <select name="{{ produit.libelle }}">
+                                <select name="{{ produit.id }}">
                                     {% for i in 0..produit.quantite %}
                                         <option value="{{ i }}">{{ i }}</option>
                                     {% endfor %}

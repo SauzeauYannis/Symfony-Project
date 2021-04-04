@@ -9,7 +9,40 @@
 {% endblock %}
 
 {% block body_page %}
-    <h1>TODO: Panier</h1>
+    {% if produits is empty %}
+        <h1>Votre panier est vide</h1>
+    {% else %}
+        <table>
+            <tr>
+                <th>Libellé</th>
+                <th>Prix unitaire</th>
+                <th>Quantité</th>
+                <th>Prix total</th>
+                <th>Action</th>
+            </tr>
+            {% for produit in produits %}
+                <tr>
+                    <td>{{ produit.libelle }}</td>
+                    <td>{{ produit.prixUnitaire }}</td>
+                    <td>{{ produit.quantite }}</td>
+                    <td>{{ produit.prixUnitaire * produit.quantite }}</td>
+                    <td><input type="button" value="Supprimer"/></td>
+                </tr>
+            {% endfor %}
+            <tr>
+                <td>Total</td>
+                <td></td>
+                <td>{{ quantiteTotal }}</td>
+                <td>{{ prixTotal }}</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td colspan="3"></td>
+                <td><input type="button" value="Acheter" /></td>
+                <td><input type="button" value="Vider" /></td>
+            </tr>
+        </table>
+    {% endif %}
 {% endblock %}
 
 {# Créé par Yannis Sauzeau et Benjamin Chevais #}

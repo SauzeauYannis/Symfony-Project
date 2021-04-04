@@ -23,13 +23,33 @@ class PanierController extends AbstractController
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
         $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
 
         $utilisateur = $utilisateurRepository->find($utilisateurId);
 
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        return $this->render('panier/panier.html.twig');
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+
+        $produitsUtilisateur = [];
+        $quantiteTotal = 0;
+        $prixTotal = 0;
+
+        foreach ($panierUtilisateur as $panierLigne) {
+            $produit = $panierLigne->getProduit();
+            $produit->setQuantite($panierLigne->getNbAchete());
+            $produitsUtilisateur[] = $produit;
+            $quantiteTotal += $produit->getQuantite();
+            $prixTotal += $produit->getPrixUnitaire() * $produit->getQuantite();
+        }
+
+        $args = [
+            'produits' => $produitsUtilisateur,
+            'quantiteTotal' => $quantiteTotal,
+            'prixTotal' => $prixTotal,
+        ];
+        return $this->render('panier/panier.html.twig', $args);
     }
 }
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Panier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -29,10 +30,41 @@ class ProduitController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        $produits = $produitRepository->findAll();
+        if (!empty($_POST))
+        {
+            $panierRepository = $em->getRepository('App:Panier');
 
-        foreach ($_POST as $key => $value)
-            $this->addFlash('info', '$key = ' . $key . ' and $value = ' . $value);
+            foreach ($_POST as $id => $quantite)
+            {
+                $produit = $produitRepository->find($id);
+                $produitQuantite = $produit->getQuantite();
+
+                if ($quantite < 0 || $quantite > $produitQuantite)
+                    throw $this->createNotFoundException('Erreur lors du traitement du formulaire');
+                else if ($quantite != 0)
+                {
+                    $panier = $panierRepository->findBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
+                    if (empty($panier))
+                    {
+                        $nouveauPanier = new Panier();
+                        $nouveauPanier->setUtilisateur($utilisateur)
+                            ->setProduit($produit)
+                            ->setNbAchete($quantite);
+                        $em->persist($nouveauPanier);
+                    }
+                    else
+                    {
+                        $panier[0]->setNbAchete($panier[0]->getNbAchete() + $quantite);
+                    }
+
+                    $produit->setQuantite($produitQuantite - $quantite);
+
+                    $em->flush();
+                }
+            }
+        }
+
+        $produits = $produitRepository->findAll();
 
         $args = ['produits' => $produits];
         return $this->render('produit/liste.html.twig', $args);
