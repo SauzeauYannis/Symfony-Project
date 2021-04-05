@@ -89,6 +89,47 @@ class UtilisateurController extends AbstractController
         return $this->render('utilisateur/edition.html.twig', $args);
     }
 
+    public function viderForUserAction($userId)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
+
+        $utilisateur = $utilisateurRepository->find($userId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+
+        foreach ($panierUtilisateur as $panierLigne) {
+            $produit = $panierLigne->getProduit();
+            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
+            $em->remove($panierLigne);
+        }
+
+        $em->flush();
+    }
+
+    /**
+     * @Route("/supprimer/{userId}", name="supprimer_utilisateur")
+     * @param $userId
+     * @return Response
+     */
+    public function supprimerAction($userId): Response
+    {
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $utilisateur = $utilisateurRepository->find($userId);
+
+        $userId.$this->viderForUserAction($userId);
+
+        $em->remove($utilisateur);
+        $em->flush();
+
+        return $this->redirectToRoute("gestion_utilisateur");
+    }
+
     /**
      * @Route("/gestion", name="gestion_utilisateur")
      */
@@ -103,7 +144,13 @@ class UtilisateurController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
             throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
 
-        return $this->render('utilisateur/gestion.html.twig');
+        $utilisateurs = $utilisateurRepository->findAll();
+
+        $args = array(
+            'utilisateur_courant' => $utilisateur,
+            'utilisateurs' => $utilisateurs);
+
+        return $this->render('utilisateur/gestion.html.twig', $args);
     }
 }
 

@@ -9,7 +9,32 @@
 {% endblock %}
 
 {% block body_page %}
-    <h1>TODO: Gestion d'un utilisateur</h1>
+    <h1>Gestion des utilisateurs</h1>
+    <table>
+        <tr>
+            <th>Identifiant</th>
+            <th>Mot de passe</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Anniversaire</th>
+            <th>IsAdmin</th>
+        </tr>
+        {% for utilisateur in utilisateurs %}
+        <tr>
+            <td>{{ utilisateur.identifiant }}</td>
+            <td>{{ utilisateur.motdepasse }}</td>
+            <td>{{ utilisateur.nom }}</td>
+            <td>{{ utilisateur.prenom }}</td>
+            <td>{{ utilisateur.anniversaire|date("d/m/Y") }}</td>
+            <td>{{ utilisateur.isadmin }}</td>
+            {% if utilisateur.id != utilisateur_courant.id %}
+                <td><a href ="{{ path('supprimer_utilisateur', {'userId': utilisateur.id}) }}"><input type="button" value="Supprimer"/></a></td>
+            {% else %}
+                <td>Suppression impossible</td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </table>
 {% endblock %}
 
 {# Créé par Yannis Sauzeau et Benjamin Chevais #}

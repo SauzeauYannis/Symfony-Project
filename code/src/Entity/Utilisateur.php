@@ -34,7 +34,6 @@ class Utilisateur
 
     /**
      * @ORM\Column(type="string", length=30)
-     * @Assert\Length(min = 8, minMessage = "Votre mot de passe doit contenir au moins 8 caractères")
      */
     private $nom;
 
@@ -77,7 +76,7 @@ class Utilisateur
 
     public function setMotdepasse(string $motdepasse): self
     {
-        $this->motdepasse = $motdepasse;
+        $this->motdepasse = sha1($motdepasse);
 
         return $this;
     }
