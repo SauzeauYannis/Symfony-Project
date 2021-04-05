@@ -3,7 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Panier;
+use App\Entity\Produit;
+use App\Form\ProduitType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -74,7 +77,7 @@ class ProduitController extends AbstractController
     /**
      * @Route("/ajouter", name="ajouter_produit")
      */
-    public function ajouterAction(): Response
+    public function ajouterAction(Request $request): Response
     {
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
@@ -85,7 +88,22 @@ class ProduitController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
             throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
 
-        return $this->render('produit/ajouter.html.twig');
+        $nouveau_produit = new Produit();
+
+        $form = $this->createForm(ProduitType::class, $nouveau_produit);
+        $form->add('send', SubmitType::class, ['label' => 'Ajouter le produit']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()){
+            $nouveau_produit = $form->getData();
+            $em->persist($nouveau_produit);
+            $em->flush();
+            $this->addFlash('info', 'Le produit a bien été ajouté');
+            return $this->redirectToRoute("accueil");
+        }
+
+        $args = array('ajouter_produit' => $form->createView());
+        return $this->render('/produit/ajouter.html.twig', $args);
     }
 }
 

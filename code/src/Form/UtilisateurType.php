@@ -18,7 +18,7 @@ class UtilisateurType extends AbstractType
             ->add('identifiant', TextType::class,
                     ['label' => 'Identifiant']) //vérifiez qu'il n'est pas déjà pris
             ->add('motdepasse', PasswordType::class,
-                    ['label' => 'Mot de passe']) // hashez le mdp avec sh1
+                    ['label' => 'Mot de passe'])
             ->add('nom', TextType::class,
                     ['label' => 'Nom'])
             ->add('prenom', TextType::class,
