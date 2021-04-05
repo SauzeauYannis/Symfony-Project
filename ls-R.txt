@@ -1,2 +1,5 @@
 site/config:
   services.yaml
+
+site/config/packages/dev:
+  web_profiler.yaml

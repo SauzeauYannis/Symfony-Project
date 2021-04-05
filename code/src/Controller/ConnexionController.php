@@ -47,8 +47,7 @@ class ConnexionController extends AbstractController
 
         $this->addFlash('info', 'Vous avez été correctement déconnecté');
 
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('accueil.html.twig', $args);
+        return $this->redirectToRoute('accueil');
     }
 }
 

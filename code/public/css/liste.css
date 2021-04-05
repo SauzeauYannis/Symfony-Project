@@ -5,6 +5,10 @@ table, input {
     width: 95%;
 }
 
+table, th, td {
+    border: 2px solid whitesmoke;
+}
+
 input {
     font-size: 20px;
     border-radius: 15px;

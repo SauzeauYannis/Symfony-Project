@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Entity\Utilisateur;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -49,7 +48,89 @@ class PanierController extends AbstractController
             'quantiteTotal' => $quantiteTotal,
             'prixTotal' => $prixTotal,
         ];
+
         return $this->render('panier/panier.html.twig', $args);
+    }
+
+    /**
+     * @Route("/supprimer/{produitId}", name="supprimer")
+     * @param $produitId
+     * @return Response
+     */
+    public function supprimerAction($produitId): Response
+    {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
+        $panierProduit = $panierRepository->findBy(['utilisateur' => $utilisateur, 'produit' => $produitId])[0];
+
+        $produit = $panierProduit->getProduit();
+        $produit->setQuantite($produit->getQuantite() + $panierProduit->getNbAchete());
+        $em->remove($panierProduit);
+
+        $em->flush();
+
+        return $this->redirectToRoute('panier');
+    }
+
+    /**
+     * @Route("/vider", name="vider")
+     */
+    public function viderAction(): Response
+    {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+
+        foreach ($panierUtilisateur as $panierLigne) {
+            $produit = $panierLigne->getProduit();
+            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
+            $em->remove($panierLigne);
+        }
+
+        $em->flush();
+
+        return $this->redirectToRoute('panier');
+    }
+
+    /**
+     * @Route("/acheter", name="acheter")
+     */
+    public function acheterAction(): Response
+    {
+        $utilisateurId = $this->getParameter('id');
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+
+        foreach ($panierUtilisateur as $panierLigne)
+            $em->remove($panierLigne);
+
+        $em->flush();
+
+        return $this->redirectToRoute('panier');
     }
 }
 

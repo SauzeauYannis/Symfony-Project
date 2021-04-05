@@ -26,7 +26,7 @@
                     <td>{{ produit.prixUnitaire }}</td>
                     <td>{{ produit.quantite }}</td>
                     <td>{{ produit.prixUnitaire * produit.quantite }}</td>
-                    <td><input type="button" value="Supprimer"/></td>
+                    <td><a href="{{ path('supprimer', {'produitId': produit.id}) }}"><input type="button" value="Supprimer"/></a></td>
                 </tr>
             {% endfor %}
             <tr>
@@ -38,8 +38,8 @@
             </tr>
             <tr>
                 <td colspan="3"></td>
-                <td><input type="button" value="Acheter" /></td>
-                <td><input type="button" value="Vider" /></td>
+                <td><a href="{{ path('acheter') }}"><input type="button" value="Acheter" /></a></td>
+                <td><a href="{{ path('vider') }}"><input type="button" value="Vider" /></a></td>
             </tr>
         </table>
     {% endif %}

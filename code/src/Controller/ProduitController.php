@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Panier;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -18,7 +19,7 @@ class ProduitController extends AbstractController
     /**
      * @Route("/liste", name="liste_produit")
      */
-    public function listeAction(): Response
+    public function listeAction(Request $request): Response
     {
         $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
@@ -30,11 +31,11 @@ class ProduitController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        if (!empty($_POST))
+        if (!empty($request->request->all()))
         {
             $panierRepository = $em->getRepository('App:Panier');
 
-            foreach ($_POST as $id => $quantite)
+            foreach ($request->request->all() as $id => $quantite)
             {
                 $produit = $produitRepository->find($id);
                 $produitQuantite = $produit->getQuantite();

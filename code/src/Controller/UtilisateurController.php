@@ -38,7 +38,7 @@ class UtilisateurController extends AbstractController
 
         // gestion du formulaire création de compte
         $form = $this->createForm(UtilisateurType::class, $nouvel_utilisateur);
-        $form->add('send', SubmitType::class, ['label' => 'create account']);
+        $form->add('send', SubmitType::class, ['label' => 'Créer votre compte']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()){
