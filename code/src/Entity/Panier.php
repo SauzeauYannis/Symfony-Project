@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\PanierRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 
 /**
  * @ORM\Table(name="im2021_panier", options={"comment":"Table du panier du site"})
@@ -32,6 +34,7 @@ class Panier
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero
      */
     private $nb_achete;
 

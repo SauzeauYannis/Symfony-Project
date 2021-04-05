@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\ProduitRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Table(name="im2021_produit", options={"comment":"Table des produits du site"})
@@ -20,16 +21,19 @@ class Produit
 
     /**
      * @ORM\Column(type="string", length=100)
+     * @Assert\Length(min=3, minMessage = "Le libellé doit faire au moins 3 caractères")
      */
     private $libelle;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\PositiveOrZero
      */
     private $prix_unitaire;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     * @Assert\PositiveOrZero
      */
     private $quantite;
 

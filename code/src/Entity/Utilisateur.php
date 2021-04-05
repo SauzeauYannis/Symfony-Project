@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Table(name="im2021_utilisateurs", options={"comment":"Table des utilisateurs du site"})
@@ -20,26 +22,29 @@ class Utilisateur
 
     /**
      * @ORM\Column(type="string", length=30, options={"comment"="sert de login (doit être unique)"})
+     * @Assert\Length(min = 8, minMessage = "Votre identifiant doit contenir au moins 8 caractères")
      */
     private $identifiant;
 
     /**
      * @ORM\Column(type="string", length=64, options={"comment"="mot de passe crypté : il faut une taille assez grande pour ne pas le tronquer"})
+     * @Assert\Length(min = 8, minMessage = "Votre mot de passe doit contenir au moins 8 caractères")
      */
     private $motdepasse;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
+     * @ORM\Column(type="string", length=30)
+     * @Assert\Length(min = 8, minMessage = "Votre mot de passe doit contenir au moins 8 caractères")
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
+     * @ORM\Column(type="string", length=30)
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="date", nullable=true, options={"default"=null})
+     * @ORM\Column(type="date")
      */
     private $anniversaire;
 
