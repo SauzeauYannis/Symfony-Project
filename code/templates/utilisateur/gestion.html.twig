@@ -28,7 +28,7 @@
             <td>{{ utilisateur.anniversaire|date("d/m/Y") }}</td>
             <td>{{ utilisateur.isadmin }}</td>
             {% if utilisateur.id != utilisateur_courant.id %}
-                <td><a href ="{{ path('supprimer_utilisateur', {'userId': utilisateur.id}) }}"><input type="button" value="Supprimer"/></a></td>
+                <td><a href ="{{ path('utilisateur_supprimer', {'userId': utilisateur.id}) }}"><input type="button" value="Supprimer"/></a></td>
             {% else %}
                 <td>Suppression impossible</td>
             {% endif %}

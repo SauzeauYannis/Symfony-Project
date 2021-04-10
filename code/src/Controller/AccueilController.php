@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -10,21 +9,14 @@ use Symfony\Component\Routing\Annotation\Route;
  * Class AccueilController
  * @package App\Controller
  */
-class AccueilController extends AbstractController
+class AccueilController extends AccesController
 {
     /**
-     * @Route("/", name="accueil")
+     * @Route("/", name="accueil_accueil")
      */
     public function accueilAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        $args = ['utilisateur' => $utilisateur];
-        return $this->render('accueil.html.twig', $args);
+        return $this->render('accueil.html.twig', ['utilisateur' => $this->getUtilisateur()]);
     }
 }
 

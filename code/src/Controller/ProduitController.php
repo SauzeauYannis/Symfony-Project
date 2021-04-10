@@ -20,7 +20,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProduitController extends AbstractController
 {
     /**
-     * @Route("/liste", name="liste_produit")
+     * @Route("/liste", name="produit_liste")
      */
     public function listeAction(Request $request): Response
     {
@@ -38,17 +38,17 @@ class ProduitController extends AbstractController
         {
             $panierRepository = $em->getRepository('App:Panier');
 
-            foreach ($request->request->all() as $id => $quantite)
+            foreach ($request->request->all() as $produitId => $quantite)
             {
-                $produit = $produitRepository->find($id);
+                $produit = $produitRepository->find($produitId);
                 $produitQuantite = $produit->getQuantite();
 
                 if ($quantite < 0 || $quantite > $produitQuantite)
                     throw $this->createNotFoundException('Erreur lors du traitement du formulaire');
                 else if ($quantite != 0)
                 {
-                    $panier = $panierRepository->findBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
-                    if (empty($panier))
+                    $panier = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
+                    if ($panier == null)
                     {
                         $nouveauPanier = new Panier();
                         $nouveauPanier->setUtilisateur($utilisateur)
@@ -58,7 +58,7 @@ class ProduitController extends AbstractController
                     }
                     else
                     {
-                        $panier[0]->setNbAchete($panier[0]->getNbAchete() + $quantite);
+                        $panier->setNbAchete($panier->getNbAchete() + $quantite);
                     }
 
                     $produit->setQuantite($produitQuantite - $quantite);
@@ -75,7 +75,7 @@ class ProduitController extends AbstractController
     }
 
     /**
-     * @Route("/ajouter", name="ajouter_produit")
+     * @Route("/ajouter", name="produit_ajouter")
      */
     public function ajouterAction(Request $request): Response
     {
@@ -99,7 +99,7 @@ class ProduitController extends AbstractController
             $em->persist($nouveau_produit);
             $em->flush();
             $this->addFlash('info', 'Le produit a bien été ajouté');
-            return $this->redirectToRoute("accueil");
+            return $this->redirectToRoute("accueil_accueil");
         }
 
         $args = array('ajouter_produit' => $form->createView());

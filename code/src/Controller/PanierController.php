@@ -15,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class PanierController extends AbstractController
 {
     /**
-     * @Route("/", name="panier")
+     * @Route("/", name="panier_panier")
      */
     public function panierAction(): Response
     {
@@ -53,7 +53,7 @@ class PanierController extends AbstractController
     }
 
     /**
-     * @Route("/supprimer/{produitId}", name="supprimer")
+     * @Route("/supprimer/{produitId}", name="panier_supprimer")
      * @param $produitId
      * @return Response
      */
@@ -69,7 +69,7 @@ class PanierController extends AbstractController
         if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
             throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
-        $panierProduit = $panierRepository->findBy(['utilisateur' => $utilisateur, 'produit' => $produitId])[0];
+        $panierProduit = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produitId]);
 
         $produit = $panierProduit->getProduit();
         $produit->setQuantite($produit->getQuantite() + $panierProduit->getNbAchete());
@@ -77,11 +77,11 @@ class PanierController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('panier');
+        return $this->redirectToRoute('panier_panier');
     }
 
     /**
-     * @Route("/vider", name="vider")
+     * @Route("/vider", name="panier_vider")
      */
     public function viderAction(): Response
     {
@@ -105,11 +105,11 @@ class PanierController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('panier');
+        return $this->redirectToRoute('panier_panier');
     }
 
     /**
-     * @Route("/acheter", name="acheter")
+     * @Route("/acheter", name="panier_acheter")
      */
     public function acheterAction(): Response
     {
@@ -130,7 +130,7 @@ class PanierController extends AbstractController
 
         $em->flush();
 
-        return $this->redirectToRoute('panier');
+        return $this->redirectToRoute('panier_panier');
     }
 }
 

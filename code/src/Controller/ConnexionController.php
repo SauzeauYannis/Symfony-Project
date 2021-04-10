@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -12,42 +11,28 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/connexion")
  */
-class ConnexionController extends AbstractController
+class ConnexionController extends AccesController
 {
     /**
-     * @Route("/se_connecter", name="se_connecter")
+     * @Route("/se_connecter", name="connexion_se_connecter")
      */
     public function seConnecterAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur != null)
-            throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
+        $this->restreindreNonAuthentifie();
 
         return $this->render('connexion/se_connecter.html.twig');
     }
 
     /**
-     * @Route("/se_deconnecter", name="se_deconnecter")
+     * @Route("/se_deconnecter", name="connexion_se_deconnecter")
      */
     public function seDeconnecterAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null)
-            throw $this->createNotFoundException('Vous devez être authentifié pour accéder à cette page');
+        $this->restreindreClientEtAdministrateur();
 
         $this->addFlash('info', 'Vous avez été correctement déconnecté');
 
-        return $this->redirectToRoute('accueil');
+        return $this->redirectToRoute('accueil_accueil');
     }
 }
 

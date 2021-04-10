@@ -19,7 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilisateurController extends AbstractController
 {
     /**
-     * @Route("/creation", name="creation_utilisateur")
+     * @Route("/creation", name="utilisateur_creation")
      * @param Request $request
      * @return Response
      */
@@ -47,7 +47,7 @@ class UtilisateurController extends AbstractController
             $em->persist($nouvel_utilisateur);
             $em->flush();
             $this->addFlash('info', 'Votre compte a bien été créé');
-            return $this->redirectToRoute("accueil");
+            return $this->redirectToRoute("accueil_accueil");
         }
 
         $args = array('create_user_form' => $form->createView());
@@ -55,7 +55,7 @@ class UtilisateurController extends AbstractController
     }
 
     /**
-     * @Route("/edition", name="edition_utilisateur")
+     * @Route("/edition", name="utilisateur_edition")
      * @param Request $request
      * @return Response
      */
@@ -80,7 +80,7 @@ class UtilisateurController extends AbstractController
             {
                 $em->flush();
                 $this->addFlash('info', 'Les modifications ont bien étés prises en compte');
-                return $this->redirectToRoute('liste_produit');
+                return $this->redirectToRoute('produit_liste');
             }
             $this->addFlash('info', 'Les modifications n\'ont pas étés prises en compte');
         }
@@ -89,18 +89,27 @@ class UtilisateurController extends AbstractController
         return $this->render('utilisateur/edition.html.twig', $args);
     }
 
-    public function viderForUserAction($userId)
+    /**
+     * @Route("/supprimer/{supprimeUtilisateurId}", name="utilisateur_supprimer")
+     * @param $supprimeUtilisateurId
+     * @return Response
+     */
+    public function supprimerAction($supprimeUtilisateurId): Response
     {
+        $utilisateurId = $this->getParameter('id');
         $em = $this->getDoctrine()->getManager();
         $utilisateurRepository = $em->getRepository('App:Utilisateur');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+
+        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
+            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
+
+        $supprimeUtilisateur = $utilisateurRepository->find($supprimeUtilisateurId);
+
         $panierRepository = $em->getRepository('App:Panier');
 
-        $utilisateur = $utilisateurRepository->find($userId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
-            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
-
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $supprimeUtilisateur]);
 
         foreach ($panierUtilisateur as $panierLigne) {
             $produit = $panierLigne->getProduit();
@@ -108,30 +117,14 @@ class UtilisateurController extends AbstractController
             $em->remove($panierLigne);
         }
 
+        $em->remove($supprimeUtilisateur);
         $em->flush();
+
+        return $this->redirectToRoute("utilisateur_gestion");
     }
 
     /**
-     * @Route("/supprimer/{userId}", name="supprimer_utilisateur")
-     * @param $userId
-     * @return Response
-     */
-    public function supprimerAction($userId): Response
-    {
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-        $utilisateur = $utilisateurRepository->find($userId);
-
-        $userId.$this->viderForUserAction($userId);
-
-        $em->remove($utilisateur);
-        $em->flush();
-
-        return $this->redirectToRoute("gestion_utilisateur");
-    }
-
-    /**
-     * @Route("/gestion", name="gestion_utilisateur")
+     * @Route("/gestion", name="utilisateur_gestion")
      */
     public function gestionAction(): Response
     {

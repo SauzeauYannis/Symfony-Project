@@ -22,7 +22,7 @@ class Utilisateur
 
     /**
      * @ORM\Column(type="string", length=30, options={"comment"="sert de login (doit être unique)"})
-     * @Assert\Length(min = 8, minMessage = "Votre identifiant doit contenir au moins 8 caractères")
+     * @Assert\Length(min = 4, minMessage = "Votre identifiant doit contenir au moins 4 caractères")
      */
     private $identifiant;
 
@@ -33,17 +33,17 @@ class Utilisateur
     private $motdepasse;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30)
+     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
      */
     private $prenom;
 
     /**
-     * @ORM\Column(type="date")
+     * @ORM\Column(type="date", nullable=true, options={"default"=null})
      */
     private $anniversaire;
 
