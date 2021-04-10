@@ -12,6 +12,7 @@
             <li><a href="{{ path('utilisateur_gestion', {'utilisateur': utilisateur}) }}">Gérer les utilisateurs</a></li>
             <li><a href="{{ path('produit_ajouter', {'utilisateur': utilisateur}) }}">Ajouter un produit</a></li>
             <li><a href="https://fr.wikipedia.org/wiki/Amour_et_Amn%C3%A9sie">Amour et Amnésie</a></li>
+            <li><a href="{{ path('accueil_service', {'utilisateur': utilisateur}) }}">Service</a></li>
         {% else %}
             <li><a href="{{ path('utilisateur_edition', {'utilisateur': utilisateur}) }}">Editer son profil</a></li>
             <li><a href="{{ path('produit_liste', {'utilisateur': utilisateur}) }}">Lister les produits</a></li>
