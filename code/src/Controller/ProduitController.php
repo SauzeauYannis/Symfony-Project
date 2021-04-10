@@ -17,22 +17,17 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/produit")
  */
-class ProduitController extends AbstractController
+class ProduitController extends AccesController
 {
     /**
      * @Route("/liste", name="produit_liste")
      */
     public function listeAction(Request $request): Response
     {
-        $utilisateurId = $this->getParameter('id');
+        $this->restreindreClient();
+
         $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
         $produitRepository = $em->getRepository('App:Produit');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
-            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
 
         if (!empty($request->request->all()))
         {
@@ -47,6 +42,7 @@ class ProduitController extends AbstractController
                     throw $this->createNotFoundException('Erreur lors du traitement du formulaire');
                 else if ($quantite != 0)
                 {
+                    $utilisateur = $this->getUtilisateur();
                     $panier = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
                     if ($panier == null)
                     {
@@ -79,14 +75,7 @@ class ProduitController extends AbstractController
      */
     public function ajouterAction(Request $request): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
-            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
+        $this->restreindreAdministrateur();
 
         $nouveau_produit = new Produit();
 
@@ -96,9 +85,13 @@ class ProduitController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()){
             $nouveau_produit = $form->getData();
+
+            $em = $this->getDoctrine()->getManager();
             $em->persist($nouveau_produit);
             $em->flush();
+
             $this->addFlash('info', 'Le produit a bien été ajouté');
+            
             return $this->redirectToRoute("accueil_accueil");
         }
 
