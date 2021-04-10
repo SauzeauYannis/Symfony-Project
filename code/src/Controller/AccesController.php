@@ -23,6 +23,18 @@ class AccesController extends AbstractController
             throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
     }
 
+    public function restreindreClient()
+    {
+        if ($this->getUtilisateur() == null || $this->getUtilisateur()->getIsadmin() == 1)
+            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
+    }
+
+    public function restreindreAdministrateur()
+    {
+        if ($this->getUtilisateur() == null || $this->getUtilisateur()->getIsadmin() != 1)
+            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
+    }
+
     public function restreindreClientEtAdministrateur()
     {
         if ($this->getUtilisateur() == null)
