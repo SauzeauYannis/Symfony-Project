@@ -63,7 +63,9 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreClient();
 
-        $form = $this->createForm(UtilisateurType::class, $this->getUtilisateur());
+        $user = $this->getUtilisateur();
+
+        $form = $this->createForm(UtilisateurType::class, $user);
         $form->add('send', SubmitType::class, ['label' => 'Editer le compte']);
         $form->handleRequest($request);
 
@@ -71,6 +73,8 @@ class UtilisateurController extends AccesController
         {
             if ($form->isValid())
             {
+                $user->setMotdepasse(sha1($user->getMotdepasse()));
+
                 $em = $this->getDoctrine()->getManager();
                 $em->flush();
 
@@ -80,6 +84,9 @@ class UtilisateurController extends AccesController
             }
             $this->addFlash('info', 'Les modifications n\'ont pas étés prises en compte');
         }
+
+        if ($form->isSubmitted())
+            $this->addFlash('error', 'Le formulaire a été mal rempli');
 
         return $this->render('utilisateur/edition.html.twig', ['edit_user_form' => $form->createView()]);
     }

@@ -94,6 +94,9 @@ class ProduitController extends AccesController
             return $this->redirectToRoute("accueil_accueil");
         }
 
+        if ($form->isSubmitted())
+            $this->addFlash('error', 'Le formulaire a été mal rempli');
+
         $args = array('ajouter_produit' => $form->createView());
         return $this->render('/produit/ajouter.html.twig', $args);
     }

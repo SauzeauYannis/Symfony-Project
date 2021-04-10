@@ -34,11 +34,13 @@ class Utilisateur
 
     /**
      * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
+     * @Assert\Length(min = 3, minMessage = "Veuillez entrer au moins 3 caractères")
      */
     private $nom;
 
     /**
-     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})
+     * @ORM\Column(type="string", length=30, nullable=true, options={"default"=null})*
+     * @Assert\Length(min = 3, minMessage = "Veuillez entrer au moins 3 caractères")
      */
     private $prenom;
 
