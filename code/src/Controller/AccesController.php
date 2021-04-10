@@ -17,7 +17,7 @@ class AccesController extends AbstractController
         return $utilisateurRepository->find($utilisateurId);
     }
 
-    public function restreindreNonAuthentifie()
+    public function restreindreVisiteur()
     {
         if ($this->getUtilisateur() != null)
             throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');

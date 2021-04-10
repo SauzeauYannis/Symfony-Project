@@ -16,7 +16,7 @@ class UtilisateurType extends AbstractType
     {
         $builder
             ->add('identifiant', TextType::class,
-                    ['label' => 'Identifiant']) //vérifiez qu'il n'est pas déjà pris
+                    ['label' => 'Identifiant'])
             ->add('motdepasse', PasswordType::class,
                     ['label' => 'Mot de passe'])
             ->add('nom', TextType::class,

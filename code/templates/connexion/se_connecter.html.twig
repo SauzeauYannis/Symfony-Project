@@ -4,11 +4,12 @@
     Se connecter
 {% endblock %}
 
-{% block stylesheets_page %}
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/se_connecter.css') }}" type="text/css">
 {% endblock %}
 
-{% block body_page %}
+{% block container %}
     <h2>Vous pourrez bientôt vous connecter</h2>
 {% endblock %}
 

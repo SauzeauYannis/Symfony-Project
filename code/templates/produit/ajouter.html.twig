@@ -4,11 +4,7 @@
     Ajouter
 {% endblock %}
 
-{% block stylesheets_page %}
-    <link rel="stylesheet" href="{{ asset('css/ajouter.css') }}" type="text/css">
-{% endblock %}
-
-{% block body_page %}
+{% block container %}
     <h1>TODO: Ajouter un produit</h1>
     {{ form(ajouter_produit) }}
 {% endblock %}

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,7 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  *
  * @Route("/utilisateur")
  */
-class UtilisateurController extends AbstractController
+class UtilisateurController extends AccesController
 {
     /**
      * @Route("/creation", name="utilisateur_creation")
@@ -25,14 +24,7 @@ class UtilisateurController extends AbstractController
      */
     public function creationAction(Request $request): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur != null)
-            throw $this->createNotFoundException('Vous devez être non authentifié pour accéder à cette page');
+        $this->restreindreVisiteur();
 
         $nouvel_utilisateur = new Utilisateur();
 
@@ -41,17 +33,24 @@ class UtilisateurController extends AbstractController
         $form->add('send', SubmitType::class, ['label' => 'Créer votre compte']);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $nouvel_utilisateur = $form->getData();
             $nouvel_utilisateur->setIsadmin(0);
+
+            $em = $this->getDoctrine()->getManager();
             $em->persist($nouvel_utilisateur);
             $em->flush();
+
             $this->addFlash('info', 'Votre compte a bien été créé');
+
             return $this->redirectToRoute("accueil_accueil");
         }
 
-        $args = array('create_user_form' => $form->createView());
-        return $this->render('utilisateur/creation.html.twig', $args);
+        if ($form->isSubmitted())
+            $this->addFlash('error', 'Le formulaire a été mal rempli');
+
+        return $this->render('utilisateur/creation.html.twig', ['create_user_form' => $form->createView()]);
     }
 
     /**
@@ -61,16 +60,9 @@ class UtilisateurController extends AbstractController
      */
     public function editionAction(Request $request): Response
     {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $this->restreindreClient();
 
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() == 1)
-            throw $this->createNotFoundException('Vous devez être client pour accéder à cette page');
-
-        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form = $this->createForm(UtilisateurType::class, $this->getUtilisateur());
         $form->add('send', SubmitType::class, ['label' => 'Editer le compte']);
         $form->handleRequest($request);
 
@@ -78,49 +70,17 @@ class UtilisateurController extends AbstractController
         {
             if ($form->isValid())
             {
+                $em = $this->getDoctrine()->getManager();
                 $em->flush();
-                $this->addFlash('info', 'Les modifications ont bien étés prises en compte');
+
+                $this->addFlash('info', 'Votre compte a bien été édité');
+
                 return $this->redirectToRoute('produit_liste');
             }
             $this->addFlash('info', 'Les modifications n\'ont pas étés prises en compte');
         }
 
-        $args = array('edit_user_form' => $form->createView());
-        return $this->render('utilisateur/edition.html.twig', $args);
-    }
-
-    /**
-     * @Route("/supprimer/{supprimeUtilisateurId}", name="utilisateur_supprimer")
-     * @param $supprimeUtilisateurId
-     * @return Response
-     */
-    public function supprimerAction($supprimeUtilisateurId): Response
-    {
-        $utilisateurId = $this->getParameter('id');
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
-            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
-
-        $supprimeUtilisateur = $utilisateurRepository->find($supprimeUtilisateurId);
-
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $supprimeUtilisateur]);
-
-        foreach ($panierUtilisateur as $panierLigne) {
-            $produit = $panierLigne->getProduit();
-            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
-            $em->remove($panierLigne);
-        }
-
-        $em->remove($supprimeUtilisateur);
-        $em->flush();
-
-        return $this->redirectToRoute("utilisateur_gestion");
+        return $this->render('utilisateur/edition.html.twig', ['edit_user_form' => $form->createView()]);
     }
 
     /**
@@ -128,22 +88,48 @@ class UtilisateurController extends AbstractController
      */
     public function gestionAction(): Response
     {
-        $utilisateurId = $this->getParameter('id');
+        $this->restreindreAdministrateur();
+
         $em = $this->getDoctrine()->getManager();
         $utilisateurRepository = $em->getRepository('App:Utilisateur');
 
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-
-        if ($utilisateur == null || $utilisateur->getIsadmin() != 1)
-            throw $this->createNotFoundException('Vous devez être administrateur pour accéder à cette page');
 
         $utilisateurs = $utilisateurRepository->findAll();
 
-        $args = array(
-            'utilisateur_courant' => $utilisateur,
-            'utilisateurs' => $utilisateurs);
+        $args = [
+            'utilisateur_courant' => $this->getUtilisateur(),
+            'utilisateurs' => $utilisateurs
+        ];
 
         return $this->render('utilisateur/gestion.html.twig', $args);
+    }
+
+    /**
+     * @Route("/supprimer/{utilisateurId}", name="utilisateur_supprimer")
+     * @param $utilisateurId
+     * @return Response
+     */
+    public function supprimerAction($utilisateurId): Response
+    {
+        $this->restreindreAdministrateur();
+
+        $em = $this->getDoctrine()->getManager();
+        $utilisateurRepository = $em->getRepository('App:Utilisateur');
+        $panierRepository = $em->getRepository('App:Panier');
+
+        $utilisateur = $utilisateurRepository->find($utilisateurId);
+        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+
+        foreach ($panierUtilisateur as $panierLigne) {
+            $produit = $panierLigne->getProduit();
+            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
+            $em->remove($panierLigne);
+        }
+
+        $em->remove($utilisateur);
+        $em->flush();
+
+        return $this->redirectToRoute("utilisateur_gestion");
     }
 }
 

@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Panier;
 use App\Entity\Produit;
 use App\Form\ProduitType;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -91,7 +90,7 @@ class ProduitController extends AccesController
             $em->flush();
 
             $this->addFlash('info', 'Le produit a bien été ajouté');
-            
+
             return $this->redirectToRoute("accueil_accueil");
         }
 

@@ -18,7 +18,7 @@ class ConnexionController extends AccesController
      */
     public function seConnecterAction(): Response
     {
-        $this->restreindreNonAuthentifie();
+        $this->restreindreVisiteur();
 
         return $this->render('connexion/se_connecter.html.twig');
     }

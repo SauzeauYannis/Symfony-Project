@@ -1,8 +1,8 @@
 {% extends 'main/layout.html.twig' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/style.css') }}" type="text/css">
-    {% block stylesheets_page %}{% endblock %}
 {% endblock %}
 
 {% block body %}
@@ -14,15 +14,18 @@
     </div>
     <div id="flash">
         {% for msg in app.session.flashBag.get('info') %}
-            <h2>{{ msg }}</h2>
+            <h2 id="flash_info">{{ msg }}</h2>
+        {% endfor %}
+        {% for msg in app.session.flashBag.get('error') %}
+            <h2 id="flash_error">{{ msg }}</h2>
         {% endfor %}
     </div>
     <div id="container">
-        {% block body_page %}{% endblock %}
+        {% block container %}{% endblock %}
     </div>
     <div id="banner_bottom">
         <footer>
-            <img src="{{ asset('image/banner_bottom.jpg') }}" alt="Image du bandeau de bas de page">
+            <img src="{{ asset('image/bandeau_bas.jpg') }}" alt="Image du bandeau de bas de page">
         </footer>
     </div>
 {% endblock %}

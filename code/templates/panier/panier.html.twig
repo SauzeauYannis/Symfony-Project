@@ -4,11 +4,12 @@
     Panier
 {% endblock %}
 
-{% block stylesheets_page %}
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/panier.css') }}" type="text/css">
 {% endblock %}
 
-{% block body_page %}
+{% block container %}
     {% if produits is empty %}
         <h1>Votre panier est vide</h1>
     {% else %}

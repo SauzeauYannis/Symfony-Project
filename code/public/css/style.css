@@ -16,15 +16,22 @@ footer {
     height: 100px;
 }
 
-#flash > h2 {
+#flash_info, #flash_error {
     width: fit-content;
     width: -moz-fit-content;
     padding: 15px;
-    background-color: aquamarine;
     color: black;
     position: relative;
     left: 25px;
     top: 10px;
+}
+
+#flash_info {
+    background-color: aquamarine;
+}
+
+#flash_error {
+    background-color: orangered;
 }
 
 label {

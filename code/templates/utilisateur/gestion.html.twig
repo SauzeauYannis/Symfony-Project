@@ -4,11 +4,12 @@
     Gestion
 {% endblock %}
 
-{% block stylesheets_page %}
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/gestion.css') }}" type="text/css">
 {% endblock %}
 
-{% block body_page %}
+{% block container %}
     <h1>Gestion des utilisateurs</h1>
     <table>
         <tr>
@@ -25,10 +26,14 @@
             <td>{{ utilisateur.motdepasse }}</td>
             <td>{{ utilisateur.nom }}</td>
             <td>{{ utilisateur.prenom }}</td>
-            <td>{{ utilisateur.anniversaire|date("d/m/Y") }}</td>
+            <td>
+                {% if utilisateur.anniversaire is not null %}
+                    {{ utilisateur.anniversaire|date("d/m/Y") }}
+                {% endif %}
+            </td>
             <td>{{ utilisateur.isadmin }}</td>
             {% if utilisateur.id != utilisateur_courant.id %}
-                <td><a href ="{{ path('utilisateur_supprimer', {'userId': utilisateur.id}) }}"><input type="button" value="Supprimer"/></a></td>
+                <td><a href ="{{ path('utilisateur_supprimer', {'utilisateurId': utilisateur.id}) }}"><input type="button" value="Supprimer"/></a></td>
             {% else %}
                 <td>Suppression impossible</td>
             {% endif %}

@@ -4,11 +4,12 @@
     Liste
 {% endblock %}
 
-{% block stylesheets_page %}
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/liste.css') }}" type="text/css">
 {% endblock %}
 
-{% block body_page %}
+{% block container %}
     <form action="{{ path('produit_liste') }}" method="post">
         <table>
             <tr>

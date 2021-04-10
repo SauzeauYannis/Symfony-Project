@@ -4,11 +4,12 @@
     Bienvenue
 {% endblock %}
 
-{% block stylesheets_page %}
+{% block stylesheets %}
+    {{ parent() }}
     <link rel="stylesheet" href="{{ asset('css/accueil.css') }}" type="text/css">
 {% endblock %}
 
-{% block body_page %}
+{% block container %}
     <h1>Bienvenue
         {% if utilisateur is null %}
             anonyme
