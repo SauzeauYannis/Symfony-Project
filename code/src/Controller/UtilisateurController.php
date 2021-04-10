@@ -98,11 +98,7 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreAdministrateur();
 
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-
-        $utilisateurs = $utilisateurRepository->findAll();
+        $utilisateurs = $this->utilisateurRepository->findAll();
 
         $args = [
             'utilisateur_courant' => $this->getUtilisateur(),
@@ -121,21 +117,17 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreAdministrateur();
 
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $utilisateur = $utilisateurRepository->find($utilisateurId);
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $utilisateur]);
+        $utilisateur = $this->utilisateurRepository->find($utilisateurId);
+        $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $utilisateur]);
 
         foreach ($panierUtilisateur as $panierLigne) {
             $produit = $panierLigne->getProduit();
             $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
-            $em->remove($panierLigne);
+            $this->em->remove($panierLigne);
         }
 
-        $em->remove($utilisateur);
-        $em->flush();
+        $this->em->remove($utilisateur);
+        $this->em->flush();
 
         return $this->redirectToRoute("utilisateur_gestion");
     }

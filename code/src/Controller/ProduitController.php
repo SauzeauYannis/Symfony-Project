@@ -25,16 +25,13 @@ class ProduitController extends AccesController
     {
         $this->restreindreClient();
 
-        $em = $this->getDoctrine()->getManager();
-        $produitRepository = $em->getRepository('App:Produit');
-
         if (!empty($request->request->all()))
         {
-            $panierRepository = $em->getRepository('App:Panier');
+            $panierRepository = $this->em->getRepository('App:Panier');
 
             foreach ($request->request->all() as $produitId => $quantite)
             {
-                $produit = $produitRepository->find($produitId);
+                $produit = $this->produitRepository->find($produitId);
                 $produitQuantite = $produit->getQuantite();
 
                 if ($quantite < 0 || $quantite > $produitQuantite)
@@ -49,7 +46,7 @@ class ProduitController extends AccesController
                         $nouveauPanier->setUtilisateur($utilisateur)
                             ->setProduit($produit)
                             ->setNbAchete($quantite);
-                        $em->persist($nouveauPanier);
+                        $this->em->persist($nouveauPanier);
                     }
                     else
                     {
@@ -58,12 +55,12 @@ class ProduitController extends AccesController
 
                     $produit->setQuantite($produitQuantite - $quantite);
 
-                    $em->flush();
+                    $this->em->flush();
                 }
             }
         }
 
-        $produits = $produitRepository->findAll();
+        $produits = $this->produitRepository->findAll();
 
         $args = ['produits' => $produits];
         return $this->render('produit/liste.html.twig', $args);

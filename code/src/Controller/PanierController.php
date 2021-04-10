@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
+use ContainerGxaAgiN\get_ServiceLocator_KfwZsneService;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use function Symfony\Component\DependencyInjection\Loader\Configurator\param;
 
 /**
  * Class PanierController
@@ -13,6 +15,7 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class PanierController extends AccesController
 {
+
     /**
      * @Route("/", name="panier_panier")
      */
@@ -20,10 +23,7 @@ class PanierController extends AccesController
     {
         $this->restreindreClient();
 
-        $em = $this->getDoctrine()->getManager();
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
+        $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
 
         $produitsUtilisateur = [];
         $quantiteTotal = 0;
@@ -55,16 +55,13 @@ class PanierController extends AccesController
     {
         $this->restreindreClient();
 
-        $em = $this->getDoctrine()->getManager();
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $panierProduit = $panierRepository->findOneBy(['utilisateur' => $this->getUtilisateur(), 'produit' => $produitId]);
+        $panierProduit = $this->panierRepository->findOneBy(['utilisateur' => $this->getUtilisateur(), 'produit' => $produitId]);
 
         $produit = $panierProduit->getProduit();
         $produit->setQuantite($produit->getQuantite() + $panierProduit->getNbAchete());
-        $em->remove($panierProduit);
+        $this->em->remove($panierProduit);
 
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('panier_panier');
     }
@@ -76,18 +73,15 @@ class PanierController extends AccesController
     {
         $this->restreindreClient();
 
-        $em = $this->getDoctrine()->getManager();
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
+        $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
 
         foreach ($panierUtilisateur as $panierLigne) {
             $produit = $panierLigne->getProduit();
             $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
-            $em->remove($panierLigne);
+            $this->em->remove($panierLigne);
         }
 
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('panier_panier');
     }
@@ -99,15 +93,12 @@ class PanierController extends AccesController
     {
         $this->restreindreClient();
 
-        $em = $this->getDoctrine()->getManager();
-        $panierRepository = $em->getRepository('App:Panier');
-
-        $panierUtilisateur = $panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
+        $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
 
         foreach ($panierUtilisateur as $panierLigne)
-            $em->remove($panierLigne);
+            $this->em->remove($panierLigne);
 
-        $em->flush();
+        $this->em->flush();
 
         return $this->redirectToRoute('panier_panier');
     }

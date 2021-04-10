@@ -3,10 +3,25 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AccesController extends AbstractController
 {
+    protected $em;
+    protected $panierRepository;
+    protected $produitRepository;
+    protected $utilisateurRepository;
+    protected $panierUtilisateur;
+
+    public function __construct(EntityManagerInterface $em){
+        $this->em = $em;
+        $this->panierRepository = $this->em->getRepository('App:Panier');
+        $this->produitRepository = $em->getRepository('App:Produit');
+        $this->utilisateurRepository = $em->getRepository('App:Utilisateur');
+        //$this->panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
+    }
+
     public function getUtilisateur(): ?Utilisateur
     {
         $utilisateurId = $this->getParameter('id');
@@ -39,5 +54,9 @@ class AccesController extends AbstractController
     {
         if ($this->getUtilisateur() == null)
             throw $this->createNotFoundException('Vous devez être authentifié pour accéder à cette page');
+    }
+
+    public function getEm(){
+        return $this->em;
     }
 }
