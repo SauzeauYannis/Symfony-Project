@@ -76,7 +76,7 @@ class Utilisateur
 
     public function setMotdepasse(string $motdepasse): self
     {
-        $this->motdepasse = sha1($motdepasse);
+        $this->motdepasse = $motdepasse;
 
         return $this;
     }

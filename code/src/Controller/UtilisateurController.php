@@ -37,6 +37,7 @@ class UtilisateurController extends AccesController
         {
             $nouvel_utilisateur = $form->getData();
             $nouvel_utilisateur->setIsadmin(0);
+            $nouvel_utilisateur->setMotdepasse(sha1($nouvel_utilisateur->getMotdepasse()));
 
             $em = $this->getDoctrine()->getManager();
             $em->persist($nouvel_utilisateur);

@@ -1,6 +1,7 @@
 h1 {
     padding: 25px;
     text-align: center;
+    color: yellow;
 }
 
 table {
@@ -13,5 +14,6 @@ table {
 table, th, td {
     border: 2px solid whitesmoke;
 }
+
 
 /* Créé par Yannis Sauzeau et Benjamin Chevais */
