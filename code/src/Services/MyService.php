@@ -6,15 +6,18 @@ namespace App\Services;
 class MyService
 {
     /**
-     * @param array $argument
+     * @param array $tab
      * @return int
      */
-    public function countTab($argument): int{
-        $temp = 0;
+    public function tabSum(array $tab): int
+    {
+        $result = 0;
 
-        foreach ($argument as $digit){
-            $temp += $digit;
-        }
-        return $temp;
+        foreach ($tab as $value)
+            $result += $value;
+
+        return $result;
     }
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

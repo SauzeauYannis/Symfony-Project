@@ -4,7 +4,6 @@ namespace App\Form;
 
 use App\Entity\Produit;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -16,12 +15,11 @@ class ProduitType extends AbstractType
     {
         $builder
             ->add('libelle', TextType::class,
-            ['label' => 'libelle'])
+                ['label' => 'libelle'])
             ->add('prix_unitaire', NumberType::class,
-                 ['label' => 'prix unitaire'])
+                ['label' => 'prix unitaire'])
             ->add('quantite', NumberType::class,
-            ['label' => 'quantite'])
-        ;
+                ['label' => 'quantite']);
     }
 
     public function configureOptions(OptionsResolver $resolver)
@@ -31,3 +29,5 @@ class ProduitType extends AbstractType
         ]);
     }
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

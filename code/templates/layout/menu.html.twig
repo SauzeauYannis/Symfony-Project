@@ -2,21 +2,20 @@
 
 <h3>Nombre de produit(s) disponible(s) : {{ nombre_de_produits }}</h3>
 <ul>
-    <li><a href="{{ path('accueil_accueil', {'utilisateur': utilisateur}) }}">Accueil</a></li>
+    <li><a href="{{ path('accueil_accueil') }}">Accueil</a></li>
     {% if utilisateur is null %}
-        <li><a href="{{ path('connexion_se_connecter', {'utilisateur': utilisateur}) }}">Se connecter</a></li>
-        <li><a href="{{ path('utilisateur_creation', {'utilisateur': utilisateur}) }}">Créer un compte</a></li>
+        <li><a href="{{ path('connexion_se_connecter') }}">Se connecter</a></li>
+        <li><a href="{{ path('utilisateur_creation') }}">Créer un compte</a></li>
     {% else %}
-        <li><a href="{{ path('connexion_se_deconnecter', {'utilisateur': utilisateur}) }}">Se déconnecter</a></li>
+        <li><a href="{{ path('connexion_se_deconnecter') }}">Se déconnecter</a></li>
         {% if utilisateur.isadmin == 1 %}
-            <li><a href="{{ path('utilisateur_gestion', {'utilisateur': utilisateur}) }}">Gérer les utilisateurs</a></li>
-            <li><a href="{{ path('produit_ajouter', {'utilisateur': utilisateur}) }}">Ajouter un produit</a></li>
+            <li><a href="{{ path('utilisateur_gestion') }}">Gérer les utilisateurs</a></li>
+            <li><a href="{{ path('produit_ajouter') }}">Ajouter un produit</a></li>
             <li><a href="https://fr.wikipedia.org/wiki/Amour_et_Amn%C3%A9sie">Amour et Amnésie</a></li>
-            <li><a href="{{ path('accueil_service', {'utilisateur': utilisateur}) }}">Service</a></li>
         {% else %}
-            <li><a href="{{ path('utilisateur_edition', {'utilisateur': utilisateur}) }}">Editer son profil</a></li>
-            <li><a href="{{ path('produit_liste', {'utilisateur': utilisateur}) }}">Lister les produits</a></li>
-            <li><a href="{{ path('panier_panier', {'utilisateur': utilisateur}) }}">Gérer son panier</a></li>
+            <li><a href="{{ path('utilisateur_edition') }}">Editer son profil</a></li>
+            <li><a href="{{ path('produit_liste') }}">Lister les produits</a></li>
+            <li><a href="{{ path('panier_panier') }}">Gérer son panier</a></li>
         {% endif %}
     {% endif %}
 </ul>

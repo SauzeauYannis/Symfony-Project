@@ -48,3 +48,5 @@ class PanierRepository extends ServiceEntityRepository
     }
     */
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */

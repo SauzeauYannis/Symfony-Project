@@ -12,24 +12,20 @@ class AccesController extends AbstractController
     protected $panierRepository;
     protected $produitRepository;
     protected $utilisateurRepository;
-    protected $panierUtilisateur;
 
-    public function __construct(EntityManagerInterface $em){
+    public function __construct(EntityManagerInterface $em)
+    {
         $this->em = $em;
         $this->panierRepository = $this->em->getRepository('App:Panier');
         $this->produitRepository = $em->getRepository('App:Produit');
         $this->utilisateurRepository = $em->getRepository('App:Utilisateur');
-        //$this->panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
     }
 
     public function getUtilisateur(): ?Utilisateur
     {
         $utilisateurId = $this->getParameter('id');
 
-        $em = $this->getDoctrine()->getManager();
-        $utilisateurRepository = $em->getRepository('App:Utilisateur');
-
-        return $utilisateurRepository->find($utilisateurId);
+        return $this->utilisateurRepository->find($utilisateurId);
     }
 
     public function restreindreVisiteur()
@@ -55,8 +51,6 @@ class AccesController extends AbstractController
         if ($this->getUtilisateur() == null)
             throw $this->createNotFoundException('Vous devez être authentifié pour accéder à cette page');
     }
-
-    public function getEm(){
-        return $this->em;
-    }
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */
