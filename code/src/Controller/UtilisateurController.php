@@ -18,6 +18,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilisateurController extends AccesController
 {
     /**
+     * @param String $user
+     * @return bool
+     */
+    public function isIdentifiantFree(String $user): bool{
+        $res = true;
+        foreach ($this->utilisateurRepository->findAll() as $RegisteredUser){
+            if($RegisteredUser->getIdentifiant() == $user){
+                $res = false;
+                break;
+            }
+        }
+        return $res;
+    }
+
+    /**
      * @Route("/creation", name="utilisateur_creation")
      * @param Request $request
      * @return Response
@@ -35,17 +50,22 @@ class UtilisateurController extends AccesController
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            $nouvel_utilisateur = $form->getData();
-            $nouvel_utilisateur->setIsadmin(0);
-            $nouvel_utilisateur->setMotdepasse(sha1($nouvel_utilisateur->getMotdepasse()));
+            if($this->isIdentifiantFree($nouvel_utilisateur->getIdentifiant()))
+            {
+                $nouvel_utilisateur = $form->getData();
+                $nouvel_utilisateur->setIsadmin(0);
+                $nouvel_utilisateur->setMotdepasse(sha1($nouvel_utilisateur->getMotdepasse()));
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($nouvel_utilisateur);
-            $em->flush();
+                $em = $this->getDoctrine()->getManager();
+                $em->persist($nouvel_utilisateur);
+                $em->flush();
 
-            $this->addFlash('info', 'Votre compte a bien été créé');
+                $this->addFlash('info', 'Votre compte a bien été créé');
 
-            return $this->redirectToRoute("accueil_accueil");
+                return $this->redirectToRoute("accueil_accueil");
+            } else {
+                $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
+            }
         }
 
         if ($form->isSubmitted())
