@@ -10,6 +10,8 @@
 {% endblock %}
 
 {% block container %}
+    <a href="{{ path('produit_mail') }}">Envoyer un mail</a>
+
     <form action="{{ path('produit_liste') }}" method="post">
         <table>
             <tr>

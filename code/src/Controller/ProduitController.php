@@ -97,6 +97,30 @@ class ProduitController extends AccesController
         $args = array('ajouter_produit' => $form->createView());
         return $this->render('/produit/ajouter.html.twig', $args);
     }
+
+    /**
+     * @Route("/send_mail", name="produit_mail")
+     * @param Request $request
+     * @param \Swift_Mailer $mailer
+     * @return Response
+     */
+    public function sendMail(Request $request, \Swift_Mailer $mailer){
+        $produits = $this->produitRepository->findAll();
+        $args = array('nb' => count($produits));
+
+        $message = (new \Swift_Message('Nombre de produit'))
+            ->setFrom('cbenjamin174@gmail.com')
+            ->setTo('cbenjamin174@gmail.com')
+            ->setBody(
+                $this->render('email/email.html.twig', $args), 'text/html'
+            );
+        $mailer->send($message);
+
+        $this->addFlash('info', 'votre message a bien été envoyé');
+
+        $args = ['produits' => $produits];
+        return $this->render('produit/liste.html.twig', $args);
+    }
 }
 
 /* Créé par Yannis Sauzeau et Benjamin Chevais */
