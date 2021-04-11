@@ -40,12 +40,14 @@ class ProduitController extends AccesController
                 {
                     $utilisateur = $this->getUtilisateur();
                     $panier = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
+
                     if ($panier == null)
                     {
                         $nouveauPanier = new Panier();
                         $nouveauPanier->setUtilisateur($utilisateur)
                             ->setProduit($produit)
                             ->setNbAchete($quantite);
+
                         $this->em->persist($nouveauPanier);
                     }
                     else
@@ -62,8 +64,7 @@ class ProduitController extends AccesController
 
         $produits = $this->produitRepository->findAll();
 
-        $args = ['produits' => $produits];
-        return $this->render('produit/liste.html.twig', $args);
+        return $this->render('produit/liste.html.twig', ['produits' => $produits]);
     }
 
     /**
@@ -79,12 +80,12 @@ class ProduitController extends AccesController
         $form->add('send', SubmitType::class, ['label' => 'Ajouter le produit']);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()){
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $nouveau_produit = $form->getData();
 
-            $em = $this->getDoctrine()->getManager();
-            $em->persist($nouveau_produit);
-            $em->flush();
+            $this->em->persist($nouveau_produit);
+            $this->em->flush();
 
             $this->addFlash('info', 'Le produit a bien été ajouté');
 
@@ -94,8 +95,7 @@ class ProduitController extends AccesController
         if ($form->isSubmitted())
             $this->addFlash('error', 'Le formulaire a été mal rempli');
 
-        $args = array('ajouter_produit' => $form->createView());
-        return $this->render('/produit/ajouter.html.twig', $args);
+        return $this->render('/produit/ajouter.html.twig', ['ajouter_produit' => $form->createView()]);
     }
 }
 

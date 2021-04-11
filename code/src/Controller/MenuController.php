@@ -11,10 +11,7 @@ class MenuController extends AccesController
      */
     public function menuAction(): Response
     {
-        $em = $this->getDoctrine()->getManager();
-        $produitRepository = $em->getRepository('App:Produit');
-
-        $produits = $produitRepository->findAll();
+        $produits = $this->produitRepository->findAll();
 
         $args = [
             'utilisateur' => $this->getUtilisateur(),

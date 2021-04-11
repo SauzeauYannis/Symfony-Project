@@ -18,21 +18,6 @@ use Symfony\Component\Routing\Annotation\Route;
 class UtilisateurController extends AccesController
 {
     /**
-     * @param String $user
-     * @return bool
-     */
-    public function isIdentifiantFree(String $user): bool{
-        $res = true;
-        foreach ($this->utilisateurRepository->findAll() as $RegisteredUser){
-            if($RegisteredUser->getIdentifiant() == $user){
-                $res = false;
-                break;
-            }
-        }
-        return $res;
-    }
-
-    /**
      * @Route("/creation", name="utilisateur_creation")
      * @param Request $request
      * @return Response
@@ -43,29 +28,27 @@ class UtilisateurController extends AccesController
 
         $nouvel_utilisateur = new Utilisateur();
 
-        // gestion du formulaire création de compte
         $form = $this->createForm(UtilisateurType::class, $nouvel_utilisateur);
         $form->add('send', SubmitType::class, ['label' => 'Créer votre compte']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            if($this->isIdentifiantFree($nouvel_utilisateur->getIdentifiant()))
+            if ($this->identifiantUnique($nouvel_utilisateur->getIdentifiant()))
             {
                 $nouvel_utilisateur = $form->getData();
                 $nouvel_utilisateur->setIsadmin(0);
                 $nouvel_utilisateur->setMotdepasse(sha1($nouvel_utilisateur->getMotdepasse()));
 
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($nouvel_utilisateur);
-                $em->flush();
+                $this->em->persist($nouvel_utilisateur);
+                $this->em->flush();
 
                 $this->addFlash('info', 'Votre compte a bien été créé');
 
                 return $this->redirectToRoute("accueil_accueil");
-            } else {
-                $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
             }
+
+            $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
         }
 
         if ($form->isSubmitted())
@@ -83,26 +66,27 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreClient();
 
-        $user = $this->getUtilisateur();
+        $utilisateur = $this->getUtilisateur();
 
-        $form = $this->createForm(UtilisateurType::class, $user);
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->add('send', SubmitType::class, ['label' => 'Editer le compte']);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted())
+        if ($form->isSubmitted() && $form->isValid())
         {
-            if ($form->isValid())
+            if ($this->identifiantUnique($utilisateur->getIdentifiant()))
             {
-                $user->setMotdepasse(sha1($user->getMotdepasse()));
+                $utilisateur->setMotdepasse(sha1($utilisateur->getMotdepasse()));
 
-                $em = $this->getDoctrine()->getManager();
-                $em->flush();
+                $this->em = $this->getDoctrine()->getManager();
+                $this->em->flush();
 
                 $this->addFlash('info', 'Votre compte a bien été édité');
 
                 return $this->redirectToRoute('produit_liste');
             }
-            $this->addFlash('info', 'Les modifications n\'ont pas étés prises en compte');
+
+            $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
         }
 
         if ($form->isSubmitted())
@@ -129,7 +113,11 @@ class UtilisateurController extends AccesController
     }
 
     /**
-     * @Route("/supprimer/{utilisateurId}", name="utilisateur_supprimer")
+     * @Route(
+     *     "/supprimer/{utilisateurId}",
+     *     name="utilisateur_supprimer",
+     *     requirements={"utilisateurId": "[0-9]+"}
+     * )
      * @param $utilisateurId
      * @return Response
      */
@@ -140,9 +128,11 @@ class UtilisateurController extends AccesController
         $utilisateur = $this->utilisateurRepository->find($utilisateurId);
         $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $utilisateur]);
 
-        foreach ($panierUtilisateur as $panierLigne) {
+        foreach ($panierUtilisateur as $panierLigne)
+        {
             $produit = $panierLigne->getProduit();
             $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
+
             $this->em->remove($panierLigne);
         }
 
@@ -150,6 +140,20 @@ class UtilisateurController extends AccesController
         $this->em->flush();
 
         return $this->redirectToRoute("utilisateur_gestion");
+    }
+
+    /**
+     * @param String $identifiant
+     * @return bool
+     */
+    private function identifiantUnique(String $identifiant): bool
+    {
+        foreach ($this->utilisateurRepository->findAll() as $utilisateur)
+        {
+            if ($utilisateur->getIdentifiant() == $identifiant)
+                return false;
+        }
+        return true;
     }
 }
 

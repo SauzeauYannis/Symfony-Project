@@ -48,3 +48,5 @@ class ProduitRepository extends ServiceEntityRepository
     }
     */
 }
+
+/* Créé par Yannis Sauzeau et Benjamin Chevais */
