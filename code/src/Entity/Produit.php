@@ -73,7 +73,10 @@ class Produit
 
     public function setQuantite(int $quantite): self
     {
-        $this->quantite = $quantite;
+    	if ($quantite == 0)
+        	$this->quantite = null;
+        else
+        	$this->quantite = $quantite;
 
         return $this;
     }
