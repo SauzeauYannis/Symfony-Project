@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UtilisateurRepository;
+use DateTimeInterface;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
-use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 /**
  * @ORM\Table(name="im2021_utilisateurs", options={"comment":"Table des utilisateurs du site"})
@@ -107,12 +107,12 @@ class Utilisateur
         return $this;
     }
 
-    public function getAnniversaire(): ?\DateTimeInterface
+    public function getAnniversaire(): ?DateTimeInterface
     {
         return $this->anniversaire;
     }
 
-    public function setAnniversaire(?\DateTimeInterface $anniversaire): self
+    public function setAnniversaire(?DateTimeInterface $anniversaire): self
     {
         $this->anniversaire = $anniversaire;
 
