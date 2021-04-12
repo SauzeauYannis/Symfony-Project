@@ -15,13 +15,13 @@ class AppFixtures extends Fixture
     {
         $utilisateur1 = new Utilisateur();
         $utilisateur1->setIdentifiant("admin")
-            ->setMotdepasse("nimda")
+            ->setMotdepasse(sha1("nimda"))
             ->setIsadmin(1);
         $manager->persist($utilisateur1);
 
         $utilisateur2 = new Utilisateur();
         $utilisateur2->setIdentifiant("gilles")
-            ->setMotdepasse("sellig")
+            ->setMotdepasse(sha1("sellig"))
             ->setNom("Subrenat")
             ->setPrenom("Gilles")
             ->setAnniversaire(new DateTime("2000-01-01"))
@@ -30,7 +30,7 @@ class AppFixtures extends Fixture
 
         $utilisateur3 = new Utilisateur();
         $utilisateur3->setIdentifiant("rita")
-            ->setMotdepasse("atir")
+            ->setMotdepasse(sha1("atir"))
             ->setNom("Zrour")
             ->setPrenom("Rita")
             ->setAnniversaire(new DateTime("2001-01-02"))
@@ -39,7 +39,7 @@ class AppFixtures extends Fixture
 
         $utilisateur4 = new Utilisateur();
         $utilisateur4->setIdentifiant("yannis")
-            ->setMotdepasse("snayni")
+            ->setMotdepasse(sha1("snayni"))
             ->setNom("Sauzeau")
             ->setPrenom("Yannis")
             ->setAnniversaire(new DateTime("2000-08-02"))
@@ -48,7 +48,7 @@ class AppFixtures extends Fixture
 
         $utilisateur5 = new Utilisateur();
         $utilisateur5->setIdentifiant("benjamin")
-            ->setMotdepasse("jambinen")
+            ->setMotdepasse(sha1("jambinen"))
             ->setNom("Chevais")
             ->setPrenom("Benjamin")
             ->setAnniversaire(new DateTime("2000-07-25"))
@@ -58,7 +58,7 @@ class AppFixtures extends Fixture
         $produit1 = new Produit();
         $produit1->setLibelle("Bitcoin")
             ->setPrixUnitaire(1)
-            ->setQuantite(85);
+            ->setQuantite(100);
         $manager->persist($produit1);
 
         $produit2 = new Produit();
@@ -70,7 +70,7 @@ class AppFixtures extends Fixture
         $produit3 = new Produit();
         $produit3->setLibelle("BenCoin")
             ->setPrixUnitaire(200)
-            ->setQuantite(35);
+            ->setQuantite(50);
         $manager->persist($produit3);
 
         $produit4 = new Produit();
