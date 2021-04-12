@@ -1,0 +1,5 @@
+INSERT INTO im2021_utilisateurs (pk, identifiant, motdepasse, nom, prenom, anniversaire, isadmin) VALUES (31, 'admin', 'a4cbb2f3933c5016da7e83fd135ab8a48b67bf61', null, null, null, 1);
+INSERT INTO im2021_utilisateurs (pk, identifiant, motdepasse, nom, prenom, anniversaire, isadmin) VALUES (32, 'gilles', 'ab9240da95937a0d51b41773eafc8ccb8e7d58b5', 'Subrenat', 'Gilles', '2000-01-01', 0);
+INSERT INTO im2021_utilisateurs (pk, identifiant, motdepasse, nom, prenom, anniversaire, isadmin) VALUES (33, 'rita', '1811ed39aa69fa4da3c457bdf096c1f10cf81a9b', 'Zrour', 'Rita', '2001-01-02', 0);
+INSERT INTO im2021_utilisateurs (pk, identifiant, motdepasse, nom, prenom, anniversaire, isadmin) VALUES (34, 'yannis', 'c7da01026b9470789bc7b0c03f31d295c1cec8c4', 'Sauzeau', 'Yannis', '2000-08-02', 0);
+INSERT INTO im2021_utilisateurs (pk, identifiant, motdepasse, nom, prenom, anniversaire, isadmin) VALUES (35, 'benjamin', '42f0bc8a3066e99497b85567056501ec3a4f2ebe', 'Chevais', 'Benjamin', '2000-07-25', 0);
