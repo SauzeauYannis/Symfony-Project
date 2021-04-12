@@ -81,7 +81,7 @@ class AppFixtures extends Fixture
         $produit5 = new Produit();
         $produit5->setLibelle("NullCoin")
             ->setPrixUnitaire(50000)
-            ->setQuantite(null);
+            ->setQuantite(100);
         $manager->persist($produit5);
 
         $panier1 = new Panier();
