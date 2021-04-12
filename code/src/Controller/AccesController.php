@@ -12,9 +12,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AccesController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
+    /**
+     * @var PanierRepository
+     */
     protected $panierRepository;
+    /**
+     * @var ProduitRepository
+     */
     protected $produitRepository;
+    /**
+     * @var UtilisateurRepository
+     */
     protected $utilisateurRepository;
 
     /**
