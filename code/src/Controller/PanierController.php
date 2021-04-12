@@ -2,7 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Panier;
 use App\Services\MyService;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\ORMException;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 /**
@@ -26,10 +31,10 @@ class PanierController extends AccesController
         $quantiteTotal = [];
         $prixTotal = [];
 
-        foreach ($panierUtilisateur as $panierLigne)
+        foreach ($panierUtilisateur as $panierProduit)
         {
-            $produit = $panierLigne->getProduit();
-            $produit->setQuantite($panierLigne->getNbAchete());
+            $produit = $panierProduit->getProduit();
+            $produit->setQuantite($panierProduit->getNbAchete());
 
             $produitsUtilisateur[] = $produit;
             $quantiteTotal[] = $produit->getQuantite();
@@ -53,6 +58,7 @@ class PanierController extends AccesController
      * )
      * @param $produitId
      * @return Response
+     * @throws ORMException
      */
     public function supprimerAction($produitId): Response
     {
@@ -60,10 +66,8 @@ class PanierController extends AccesController
 
         $panierProduit = $this->panierRepository->findOneBy(['utilisateur' => $this->getUtilisateur(), 'produit' => $produitId]);
 
-        $produit = $panierProduit->getProduit();
-        $produit->setQuantite($produit->getQuantite() + $panierProduit->getNbAchete());
+        PanierController::remettreEnStock($this->em, $panierProduit);
 
-        $this->em->remove($panierProduit);
         $this->em->flush();
 
         return $this->redirectToRoute('panier_panier');
@@ -71,6 +75,7 @@ class PanierController extends AccesController
 
     /**
      * @Route("/vider", name="panier_vider")
+     * @throws ORMException
      */
     public function viderAction(): Response
     {
@@ -78,13 +83,8 @@ class PanierController extends AccesController
 
         $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $this->getUtilisateur()]);
 
-        foreach ($panierUtilisateur as $panierLigne)
-        {
-            $produit = $panierLigne->getProduit();
-            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
-
-            $this->em->remove($panierLigne);
-        }
+        foreach ($panierUtilisateur as $panierProduit)
+            PanierController::remettreEnStock($this->em, $panierProduit);
 
         $this->em->flush();
 
@@ -106,6 +106,19 @@ class PanierController extends AccesController
         $this->em->flush();
 
         return $this->redirectToRoute('panier_panier');
+    }
+
+    /**
+     * @param EntityManager $em
+     * @param Panier $panierProduit
+     * @throws ORMException
+     */
+    public static function remettreEnStock(EntityManagerInterface $em, Panier $panierProduit): void
+    {
+        $produit = $panierProduit->getProduit();
+        $produit->setQuantite($produit->getQuantite() + $panierProduit->getNbAchete());
+
+        $em->remove($panierProduit);
     }
 }
 

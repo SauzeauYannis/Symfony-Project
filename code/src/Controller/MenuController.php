@@ -4,6 +4,10 @@ namespace App\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 
+/**
+ * Class MenuController
+ * @package App\Controller
+ */
 class MenuController extends AccesController
 {
     /**

@@ -15,4 +15,10 @@ input {
     top: 30px;
 }
 
+a {
+    font-size: 20px;
+    position: relative;
+    align-content: center;
+}
+
 /* Créé par Yannis Sauzeau et Benjamin Chevais */

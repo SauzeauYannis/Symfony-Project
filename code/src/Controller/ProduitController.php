@@ -5,6 +5,8 @@ namespace App\Controller;
 use App\Entity\Panier;
 use App\Entity\Produit;
 use App\Form\ProduitType;
+use Swift_Mailer;
+use Swift_Message;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,11 +27,13 @@ class ProduitController extends AccesController
     {
         $this->restreindreClient();
 
-        if (!empty($request->request->all()))
+        $postParams = $request->request->all();
+
+        if (!empty($postParams))
         {
             $panierRepository = $this->em->getRepository('App:Panier');
 
-            foreach ($request->request->all() as $produitId => $quantite)
+            foreach ($postParams as $produitId => $quantite)
             {
                 $produit = $this->produitRepository->find($produitId);
                 $produitQuantite = $produit->getQuantite();
@@ -39,9 +43,9 @@ class ProduitController extends AccesController
                 else if ($quantite != 0)
                 {
                     $utilisateur = $this->getUtilisateur();
-                    $panier = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
+                    $panierProduit = $panierRepository->findOneBy(['utilisateur' => $utilisateur, 'produit' => $produit]);
 
-                    if ($panier == null)
+                    if ($panierProduit == null)
                     {
                         $nouveauPanier = new Panier();
                         $nouveauPanier->setUtilisateur($utilisateur)
@@ -51,9 +55,7 @@ class ProduitController extends AccesController
                         $this->em->persist($nouveauPanier);
                     }
                     else
-                    {
-                        $panier->setNbAchete($panier->getNbAchete() + $quantite);
-                    }
+                        $panierProduit->setNbAchete($panierProduit->getNbAchete() + $quantite);
 
                     $produit->setQuantite($produitQuantite - $quantite);
 
@@ -62,9 +64,7 @@ class ProduitController extends AccesController
             }
         }
 
-        $produits = $this->produitRepository->findAll();
-
-        return $this->render('produit/liste.html.twig', ['produits' => $produits]);
+        return $this->render('produit/liste.html.twig', ['produits' => $this->produitRepository->findAll()]);
     }
 
     /**
@@ -100,26 +100,25 @@ class ProduitController extends AccesController
 
     /**
      * @Route("/send_mail", name="produit_mail")
-     * @param Request $request
-     * @param \Swift_Mailer $mailer
+     * @param Swift_Mailer $mailer
      * @return Response
      */
-    public function sendMail(Request $request, \Swift_Mailer $mailer){
-        $produits = $this->produitRepository->findAll();
-        $args = array('nb' => count($produits));
+    public function mailAction(Swift_Mailer $mailer): Response
+    {
+        // Changer cette variable selon l'adresse mail utilisée dans la variable MAILER_URL du fichier .env.local
+        $mail = 'studecook@gmail.com';
 
-        $message = (new \Swift_Message('Nombre de produit'))
-            ->setFrom('cbenjamin174@gmail.com')
-            ->setTo('cbenjamin174@gmail.com')
-            ->setBody(
-                $this->render('email/email.html.twig', $args), 'text/html'
-            );
+        $produits = $this->produitRepository->findAll();
+
+        $message = (new Swift_Message('Nombre de produit'))
+            ->setFrom($mail)
+            ->setTo($mail)
+            ->setBody('Il y a ' . count($produits) . ' produit(s) sur le site !');
         $mailer->send($message);
 
         $this->addFlash('info', 'votre message a bien été envoyé');
 
-        $args = ['produits' => $produits];
-        return $this->render('produit/liste.html.twig', $args);
+        return $this->render('produit/liste.html.twig', ['produits' => $produits]);
     }
 }
 

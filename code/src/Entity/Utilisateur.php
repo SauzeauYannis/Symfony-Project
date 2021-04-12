@@ -28,7 +28,7 @@ class Utilisateur
 
     /**
      * @ORM\Column(type="string", length=64, options={"comment"="mot de passe crypté : il faut une taille assez grande pour ne pas le tronquer"})
-     * @Assert\Length(min = 8, minMessage = "Votre mot de passe doit contenir au moins 8 caractères")
+     * @Assert\Length(min = 4, minMessage = "Votre mot de passe doit contenir au moins 4 caractères")
      */
     private $motdepasse;
 

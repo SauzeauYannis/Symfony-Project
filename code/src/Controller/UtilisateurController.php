@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Utilisateur;
 use App\Form\UtilisateurType;
+use Doctrine\ORM\ORMException;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -26,35 +27,7 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreVisiteur();
 
-        $nouvel_utilisateur = new Utilisateur();
-
-        $form = $this->createForm(UtilisateurType::class, $nouvel_utilisateur);
-        $form->add('send', SubmitType::class, ['label' => 'Créer votre compte']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            if ($this->identifiantUnique($nouvel_utilisateur->getIdentifiant()))
-            {
-                $nouvel_utilisateur = $form->getData();
-                $nouvel_utilisateur->setIsadmin(0);
-                $nouvel_utilisateur->setMotdepasse(sha1($nouvel_utilisateur->getMotdepasse()));
-
-                $this->em->persist($nouvel_utilisateur);
-                $this->em->flush();
-
-                $this->addFlash('info', 'Votre compte a bien été créé');
-
-                return $this->redirectToRoute("accueil_accueil");
-            }
-
-            $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
-        }
-
-        if ($form->isSubmitted())
-            $this->addFlash('error', 'Le formulaire a été mal rempli');
-
-        return $this->render('utilisateur/creation.html.twig', ['create_user_form' => $form->createView()]);
+        return $this->formulaireUtilisateur($request, new Utilisateur(), true);
     }
 
     /**
@@ -66,33 +39,7 @@ class UtilisateurController extends AccesController
     {
         $this->restreindreClient();
 
-        $utilisateur = $this->getUtilisateur();
-
-        $form = $this->createForm(UtilisateurType::class, $utilisateur);
-        $form->add('send', SubmitType::class, ['label' => 'Editer le compte']);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid())
-        {
-            if ($this->identifiantUnique($utilisateur->getIdentifiant()))
-            {
-                $utilisateur->setMotdepasse(sha1($utilisateur->getMotdepasse()));
-
-                $this->em = $this->getDoctrine()->getManager();
-                $this->em->flush();
-
-                $this->addFlash('info', 'Votre compte a bien été édité');
-
-                return $this->redirectToRoute('produit_liste');
-            }
-
-            $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
-        }
-
-        if ($form->isSubmitted())
-            $this->addFlash('error', 'Le formulaire a été mal rempli');
-
-        return $this->render('utilisateur/edition.html.twig', ['edit_user_form' => $form->createView()]);
+        return $this->formulaireUtilisateur($request, $this->getUtilisateur(), false);
     }
 
     /**
@@ -120,6 +67,7 @@ class UtilisateurController extends AccesController
      * )
      * @param $utilisateurId
      * @return Response
+     * @throws ORMException
      */
     public function supprimerAction($utilisateurId): Response
     {
@@ -128,13 +76,8 @@ class UtilisateurController extends AccesController
         $utilisateur = $this->utilisateurRepository->find($utilisateurId);
         $panierUtilisateur = $this->panierRepository->findBy(['utilisateur' => $utilisateur]);
 
-        foreach ($panierUtilisateur as $panierLigne)
-        {
-            $produit = $panierLigne->getProduit();
-            $produit->setQuantite($produit->getQuantite() + $panierLigne->getNbAchete());
-
-            $this->em->remove($panierLigne);
-        }
+        foreach ($panierUtilisateur as $panierProduit)
+            PanierController::remettreEnStock($this->em, $panierProduit);
 
         $this->em->remove($utilisateur);
         $this->em->flush();
@@ -154,6 +97,49 @@ class UtilisateurController extends AccesController
                 return false;
         }
         return true;
+    }
+
+    /**
+     * @param Request $request
+     * @param Utilisateur $utilisateur
+     * @param bool $estNouveau
+     * @return Response
+     */
+    private function formulaireUtilisateur(Request $request, Utilisateur $utilisateur, bool $estNouveau): Response
+    {
+        $form = $this->createForm(UtilisateurType::class, $utilisateur);
+        $form->add('send', SubmitType::class, ['label' => 'Valider']);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            if ($estNouveau && !$this->identifiantUnique($utilisateur->getIdentifiant()))
+                $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
+            else
+            {
+                $utilisateur->setMotdepasse(sha1($utilisateur->getMotdepasse()));
+
+                if ($estNouveau)
+                {
+                    $utilisateur->setIsadmin(0);
+                    $this->em->persist($utilisateur);
+                }
+
+                $this->em->flush();
+
+                $this->addFlash('info', 'Le formulaire a été envoyé');
+
+                return $this->redirectToRoute("accueil_accueil");
+            }
+        }
+
+        if ($form->isSubmitted())
+            $this->addFlash('error', 'Le formulaire a été mal rempli');
+
+        if ($estNouveau)
+            return $this->render('utilisateur/creation.html.twig', ['create_user_form' => $form->createView()]);
+        else
+            return $this->render('utilisateur/edition.html.twig', ['edit_user_form' => $form->createView()]);
     }
 }
 
