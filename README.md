@@ -96,7 +96,7 @@ You can now move around the site with the menu.
 
 There are three types of users who have access to different pages: visitor, client and administrator.
 
-To change the user, you have to edit the id parameter in the [services.yaml] file (https://github.com/SauzeauYannis/Symfony-Project/blob/main/code/config/services.yaml).
+To change the user, you have to edit the id parameter in the [services.yaml](https://github.com/SauzeauYannis/Symfony-Project/blob/main/code/config/services.yaml) file .
 
 <a name="en_sk"/>
 
