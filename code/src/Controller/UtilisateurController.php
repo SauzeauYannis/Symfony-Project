@@ -86,20 +86,6 @@ class UtilisateurController extends AccesController
     }
 
     /**
-     * @param String $identifiant
-     * @return bool
-     */
-    private function identifiantUnique(String $identifiant): bool
-    {
-        foreach ($this->utilisateurRepository->findAll() as $utilisateur)
-        {
-            if ($utilisateur->getIdentifiant() == $identifiant)
-                return false;
-        }
-        return true;
-    }
-
-    /**
      * @param Request $request
      * @param Utilisateur $utilisateur
      * @param bool $estNouveau
@@ -107,15 +93,15 @@ class UtilisateurController extends AccesController
      */
     private function formulaireUtilisateur(Request $request, Utilisateur $utilisateur, bool $estNouveau): Response
     {
+        $ancienIdentifiant = $utilisateur->getIdentifiant();
+
         $form = $this->createForm(UtilisateurType::class, $utilisateur);
         $form->add('send', SubmitType::class, ['label' => 'Valider']);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid())
         {
-            if ($estNouveau && !$this->identifiantUnique($utilisateur->getIdentifiant()))
-                $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
-            else
+            if ($this->identifiantUnique($utilisateur->getIdentifiant(), $ancienIdentifiant))
             {
                 $utilisateur->setMotdepasse(sha1($utilisateur->getMotdepasse()));
 
@@ -131,6 +117,8 @@ class UtilisateurController extends AccesController
 
                 return $this->redirectToRoute("accueil_accueil");
             }
+
+            $this->addFlash('error', 'Cet identifiant est déjà pris, Veuillez en choisir un autre');
         }
 
         if ($form->isSubmitted())
@@ -140,6 +128,21 @@ class UtilisateurController extends AccesController
             return $this->render('utilisateur/creation.html.twig', ['create_user_form' => $form->createView()]);
         else
             return $this->render('utilisateur/edition.html.twig', ['edit_user_form' => $form->createView()]);
+    }
+
+    /**
+     * @param string $nouveauIdentifiant
+     * @param string|null $ancienIdentifiant
+     * @return bool
+     */
+    private function identifiantUnique(string $nouveauIdentifiant, ?string $ancienIdentifiant): bool
+    {
+        foreach ($this->utilisateurRepository->findAll() as $utilisateur)
+        {
+            if ($utilisateur->getIdentifiant() == $nouveauIdentifiant && $nouveauIdentifiant != $ancienIdentifiant)
+                return false;
+        }
+        return true;
     }
 }
 
