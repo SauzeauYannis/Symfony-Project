@@ -15,6 +15,9 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
  */
 class AccesController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     protected $em;
     /**
      * @var PanierRepository
