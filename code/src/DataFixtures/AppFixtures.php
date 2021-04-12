@@ -5,6 +5,7 @@ namespace App\DataFixtures;
 use App\Entity\Panier;
 use App\Entity\Produit;
 use App\Entity\Utilisateur;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 
@@ -23,7 +24,7 @@ class AppFixtures extends Fixture
             ->setMotdepasse("sellig")
             ->setNom("Subrenat")
             ->setPrenom("Gilles")
-            ->setAnniversaire(new \DateTime("2000-01-01"))
+            ->setAnniversaire(new DateTime("2000-01-01"))
             ->setIsadmin(0);
         $manager->persist($utilisateur2);
 
@@ -32,7 +33,7 @@ class AppFixtures extends Fixture
             ->setMotdepasse("atir")
             ->setNom("Zrour")
             ->setPrenom("Rita")
-            ->setAnniversaire(new \DateTime("2001-01-02"))
+            ->setAnniversaire(new DateTime("2001-01-02"))
             ->setIsadmin(0);
         $manager->persist($utilisateur3);
 
@@ -41,7 +42,7 @@ class AppFixtures extends Fixture
             ->setMotdepasse("snayni")
             ->setNom("Sauzeau")
             ->setPrenom("Yannis")
-            ->setAnniversaire(new \DateTime("2000-08-02"))
+            ->setAnniversaire(new DateTime("2000-08-02"))
             ->setIsadmin(0);
         $manager->persist($utilisateur4);
 
@@ -50,7 +51,7 @@ class AppFixtures extends Fixture
             ->setMotdepasse("jambinen")
             ->setNom("Chevais")
             ->setPrenom("Benjamin")
-            ->setAnniversaire(new \DateTime("2000-07-25"))
+            ->setAnniversaire(new DateTime("2000-07-25"))
             ->setIsadmin(0);
         $manager->persist($utilisateur5);
 
