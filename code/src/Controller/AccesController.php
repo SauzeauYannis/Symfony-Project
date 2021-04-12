@@ -3,6 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Utilisateur;
+use App\Repository\PanierRepository;
+use App\Repository\ProduitRepository;
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
@@ -13,9 +16,19 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class AccesController extends AbstractController
 {
     protected $em;
+    /**
+     * @var PanierRepository
+     */
     protected $panierRepository;
+    /**
+     * @var ProduitRepository
+     */
     protected $produitRepository;
+    /**
+     * @var UtilisateurRepository
+     */
     protected $utilisateurRepository;
+
 
     /**
      * AccesController constructor.
