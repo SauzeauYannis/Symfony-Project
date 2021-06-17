@@ -63,7 +63,7 @@ Pour changer d'utilisateur, il faut éditer le paramètre id dans le fichier [se
 
 ### Résultat
 
-Nous avons obtenu la note de ?/20. (Résultat en juillet)
+Nous avons obtenu la note de 19/20.
 
 <a name="en"/>
 
@@ -116,4 +116,4 @@ To change the user, you have to edit the id parameter in the [services.yaml](htt
 
 ### Result
 
-We obtained a score of ?/20. (Result in July)
+We obtained a score of 19/20.
